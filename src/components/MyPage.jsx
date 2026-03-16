@@ -1,3 +1,5 @@
+import ArrowButton from './ArrowButton'
+
 function MyPage() {
   return (
     <section
@@ -13,6 +15,12 @@ function MyPage() {
         <h1 className="text-6xl font-bold text-gray-900 dark:text-white leading-tight">
           임재섭
         </h1>
+        <h3 className="text-2xl test-gray-600 dark:text-gray-400">
+            liso_o@naver.com
+        </h3>
+        <h6 className="text-sm text-gray-500 dark:text-gray-500">
+            010-9340-3327
+        </h6>
 
 
         <div className="flex gap-3 mt-6">
@@ -35,12 +43,9 @@ function MyPage() {
       </div>
 
       {/* 아래 화살표 */}
-      <a
-        href="#experience"
-        className="absolute bottom-10 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-2xl animate-bounce transition-colors"
-      >
-        ↓
-      </a>
+      <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
+        <ArrowButton href="#experience" direction="down" />
+      </div>
     </section>
   )
 }
