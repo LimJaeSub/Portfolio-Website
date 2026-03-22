@@ -4,6 +4,7 @@ import './App.css'
 import MyPage from './components/MyPage.jsx'
 import Experience from './components/Experience.jsx'
 import Projects from './components/Projects.jsx'
+import Skills from './components/Skills.jsx'
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
         <MyPage />
         <Experience />
         <Projects />
+        <Skills />
       </main>
     </div>
   )

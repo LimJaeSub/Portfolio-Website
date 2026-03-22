@@ -34,9 +34,11 @@ function Experience() {
           </p>
           <ul className="flex flex-col gap-3">
             {[
-              'GS 인증 테스트 케이스 설계 및 수행',
-              '결함 리포팅 및 재현 시나리오 작성',
-              '테스트 보고서 작성 및 인증 프로세스 지원',
+              'GS 인증 16건 진행',
+              '시험당 평균 TC 180개 작성 & 결함 평균 20~30개 발견 및 회귀테스트',
+              '메뉴 트리 기반 기능 테스트 및 Jmeter를 활용한 부하 테스트 수행',
+              'Invicti 보안 스캔 - HSTS 설정 미흡 , 구버전 소프트웨어 , 쿠키 HttpOnly 미설정 등 보안 취약점 발견',
+              '테스트 케이스 & 결함 리포트 excel로 작성하여 결함 추적'
             ].map((item) => (
               <li
                 key={item}
@@ -88,7 +90,7 @@ function Experience() {
 
     {/* 아래 화살표 */}
       <div className="absolute bottom-10 left-1/2 -translate-x-1/2">
-        <ArrowButton href="#experience" direction="down" />
+        <ArrowButton href="#Projects" direction="down" />
       </div>
     </section>
   )
