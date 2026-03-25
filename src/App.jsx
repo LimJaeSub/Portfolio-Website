@@ -5,6 +5,7 @@ import MyPage from './components/MyPage.jsx'
 import Experience from './components/Experience.jsx'
 import Projects from './components/Projects.jsx'
 import Skills from './components/Skills.jsx'
+import SideNav from './components/SideNav.jsx'
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Experience />
         <Projects />
         <Skills />
+        <SideNav />
       </main>
     </div>
   )
