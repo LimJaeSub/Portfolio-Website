@@ -116,17 +116,23 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 - [x] CSS Scroll Snap 적용
 - [x] 디자인 방향 확정 — Nocturne 디자인 시스템
 - [x] 프로젝트 확장 구조 설계 (대표작 분리 + 카테고리)
+- [x] Nocturne 디자인 시스템으로 리뉴얼 (토큰 정의 + 전 컴포넌트 적용)
+- [x] React Router 도입 (`/projects`, `/projects/:id`)
+- [x] 프로젝트 상세 페이지 구현 (탭 4종, 데이터 없으면 미노출)
+- [x] 데이터를 `src/data/projects.js`로 이관
+- [x] CLAUDE.md를 레포에 포함 + `docs/portfolio-template.md` 신설
 
 ## 진행 중 / 다음 작업
-- [ ] **Nocturne 디자인 시스템으로 리뉴얼** ← 현재 여기
-- [ ] React Router 도입 (`/projects`, `/projects/:id`)
-- [ ] 다크/라이트 토글 (Redux Toolkit)
-- [ ] Vercel 배포
+- [ ] **Vercel 배포** ← 현재 여기 (Phase 3)
+- [ ] 다크/라이트 토글 (Redux Toolkit) — Phase 4
+- [ ] Playwright E2E 테스트 — Phase 5
 
 ## 미확정 사항
 - 기존 프로젝트 2개(Wanted, CI/CD)의 회고 내용 작성
 - 대표 프로젝트 3개 선정
 - 실무 프로젝트를 언제 추가할지
+- **이슈 타입 색상(Story/Task/Bug) 디자인 확인** — Nocturne 팔레트에 없어 개발 쪽에서 임의로 정한 값
+- **Experience 섹션 768px 높이 확인** — 구현은 끝났으나 실제 화면 확인 미완료
 
 ---
 
@@ -164,6 +170,9 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 | 25 | 실무 프로젝트는 도구·기법·역할까지만 기술 | 고객사 정보 보호. 발견한 결함 상세는 판단이 애매하면 제외 |
 | 26 | 각 프로젝트 레포에 **`portfolio.md`** 를 두어 인계 | 프로젝트 레포에는 이 CLAUDE.md가 없으므로, 템플릿 파일 자체가 작성 규칙을 담도록 함. 구조가 스키마와 같아 옮길 때 기계적 변환만 필요 |
 | 27 | 개발 일지는 **막힌 순간에** 기록 | 사후에 몰아 쓰면 에러 메시지·시도 과정 등 세부사항이 사라짐. 그 세부사항이 일지의 가치 |
+| 28 | 그림자만 `@theme` 밖의 일반 CSS 변수(`--elev-*`)로 둔다 | Tailwind v4는 `shadow-*` 유틸에 `@theme` 값을 `var()`가 아니라 문자열로 인라인한다. `@theme`에 넣으면 `.dark`에서 그림자가 바뀌지 않는다. `shadow-(--elev-md)` 형태로 참조해야 런타임 교체가 동작 |
+| 29 | 이슈 타입 색상(Story/Task/Bug)은 자체 토큰으로 정의 | Nocturne 팔레트에 초록·빨강이 없다. Tailwind 기본 색상 직접 사용 금지([8. 코딩 컨벤션])를 지키려고 `--color-story/task/bug`의 200·800 단계 6개를 accent 램프와 같은 명도로 추가. **디자인 확인 미완료** |
+| 30 | 섹션 높이는 `h-screen`이 아니라 `min-h-screen` | 내용이 많은 섹션(Experience)이 잘리는 대신 늘어나게 한다. 스냅은 `snap-start`라 섹션이 뷰포트보다 커도 시작점에 붙는다 (결정 18의 구현 세부) |
 
 ---
 
@@ -177,7 +186,11 @@ src/
 │   ├── Projects.jsx         # 프로젝트 카드 그리드
 │   ├── Skills.jsx           # 기술 스택 카드 그리드
 │   ├── SideNav.jsx          # 우측 고정 네비게이션
-│   └── ArrowButton.jsx      # 재사용 화살표 버튼
+│   ├── ArrowButton.jsx      # 재사용 화살표 버튼
+│   ├── Section.jsx          # 메인 섹션 공통 골격 (라벨 + 제목 + 위아래 화살표)
+│   ├── ProjectCard.jsx      # 프로젝트 카드 (홈 · 목록 페이지 공용)
+│   ├── Tag.jsx              # 기술 스택 태그
+│   └── Divider.jsx          # 페이드 구분선 (Nocturne 시그니처)
 ├── pages/
 │   ├── Home.jsx             # 메인 (섹션 4개 스크롤)
 │   ├── ProjectList.jsx      # 전체 프로젝트 목록 + 카테고리 필터
@@ -449,14 +462,15 @@ background: linear-gradient(to right,
 
 ## 레이아웃 규칙
 - 최대 폭 `1180px`, 좌우 패딩 `clamp(20px, 5vw, 72px)`
-- 각 섹션은 `h-screen`(스크롤 스냅 유지 — [4. 결정 기록] 18번)
+- 각 섹션은 `min-h-screen`(스크롤 스냅 유지 — [4. 결정 기록] 18·30번)
 - 섹션 내부 정렬: 좌측 정렬 (중앙 정렬 아님)
 - 카드 그리드: `repeat(auto-fit, minmax(240~300px, 1fr))`, gap `16.8px`
 - 우측 고정 리모콘 Nav — 캡슐 컨테이너 + 원형 버튼
 - 상단 헤더는 두지 않는다 (우측 Nav와 중복)
 
-> ⚠️ Experience 섹션은 내용이 많아 `h-screen`에서 잘릴 수 있다.
-> 구현 후 반드시 실제 화면(높이 768px 기준)에서 확인할 것.
+> ⚠️ Experience 섹션은 내용이 많아 높이가 낮은 화면에서 문제가 되기 쉽다.
+> `min-h-screen`이라 잘리는 대신 늘어나지만, 스냅과 겹칠 때의 느낌은 별개다.
+> **높이 768px 기준 실제 화면 확인이 아직 안 끝났다.**
 
 ## 색상 적용 규칙 — 다크모드 구현 방식
 
@@ -482,6 +496,10 @@ CSS 변수를 `.dark` 클래스에서 교체하는 방식을 쓴다.
   --color-accent: #9184d9;
 }
 ```
+
+**그림자만 예외다.** `@theme` 밖의 일반 변수로 두고 `shadow-(--elev-md)`로 참조한다.
+`@theme`에 넣으면 Tailwind가 값을 문자열로 인라인해서 `.dark` 교체가 통하지 않는다.
+([4. 결정 기록] 28번)
 
 ```jsx
 // 이렇게 쓴다 — 모드 전환은 변수가 처리
@@ -592,6 +610,39 @@ chore:    빌드, 설정 등 기타
 
 > 다른 PC나 환경에서 이어서 작업할 때 참고
 
+## 인수인계 메모
+
+> 작성 2026-09-15 — Phase 2(디자인 리뉴얼 + Router) 완료 시점
+
+### 지금 상태
+- `main` 브랜치, 커밋 `59c0e96`까지. **아직 push 안 됨**
+- 린트·빌드 통과. 개발 서버 정상 동작
+- 배포 전이라 공개 URL 없음
+
+### 넘겨받으면 먼저 할 것
+1. `npm install` — `react-router-dom`이 추가됐다
+2. `npm run dev` — **5173이 다른 프로젝트에 점유돼 있으면 Vite가 5174 등으로 자동 이동한다.** 터미널에 찍힌 주소를 확인할 것
+3. 이 문서의 [3. 현재 상태]와 [4. 결정 기록]을 읽을 것
+
+### 확인이 끝나지 않은 항목
+
+| 항목 | 상태 |
+|---|---|
+| Experience 섹션 768px 높이 | 구현 완료, **실제 화면 확인 미완료** |
+| 이슈 타입 색상(Story/Task/Bug) | 개발 쪽에서 임의 지정, **디자인 확인 미완료** ([4] 29번) |
+| 회고(`retrospective`) 렌더링 | 코드는 작성됐으나 데이터가 비어 있어 **화면에 그려진 적 없음** |
+| 라이트 모드 전체 | 토큰은 정의됐으나 토글이 없어 `<html>`의 `class="dark"`를 지워야 확인 가능 |
+
+### 알아둘 것
+- **git identity가 이 레포에만 설정돼 있다** (`재섭 <wotjw734843@gmail.com>`).
+  전역 설정이 비어 있어 커밋이 막혔던 이력이 있다.
+  새 환경에서 같은 증상이 나면 `git config user.email`부터 확인할 것
+- **Nocturne 원본 CSS는 레포에 없다.** 토큰은 `src/App.css`에 옮겨져 있어 보통은 필요 없지만,
+  컴포넌트 클래스(`.btn` `.card` `.seg` `.table` 등) 스펙이 필요하면
+  Claude Design 산출물(`styles.css` / `styles-light.css`)을 다시 받아야 한다
+- Wanted·CI/CD의 `period: '2026.01'`은 다른 레포에서 진행돼
+  이 레포 이력으로는 확인할 수 없는 값이다. 임재섭이 직접 지정했다
+
 ## 필수 요구사항
 - Node.js LTS (기존 개발 환경 기준 v24.14.0)
 - npm (v11.9.0)
@@ -604,7 +655,7 @@ git clone https://github.com/LimJaeSub/Portfolio-Website.git
 cd Portfolio-Website
 npm install
 npm run dev
-# → http://localhost:5173
+# → http://localhost:5173 (점유 중이면 5174 등으로 자동 이동)
 ```
 
 ## 주요 명령어
@@ -658,10 +709,17 @@ import './App.css'
 - Git 기본 브랜치가 `master`일 수 있음 → `git branch -M main`
 
 ### 5. 스크롤 스냅
-`src/App.css`에서 `scroll-snap-type`으로 섹션 단위 스크롤을 구현했다.
-각 섹션은 `h-screen` + `scroll-snap-align: start`가 전제이므로,
-섹션 높이를 바꾸면 스냅 동작이 깨진다.
-**상세 페이지(`/projects/:id`)는 일반 스크롤이므로 스냅이 적용되면 안 된다.**
+**`App.css`에 있지 않다.** `src/pages/Home.jsx`의 래퍼 `<main>`에 Tailwind 유틸로 걸려 있다.
+
+```jsx
+<main className="h-screen snap-none overflow-y-auto md:snap-y md:snap-mandatory">
+```
+
+각 섹션은 `min-h-screen` + `md:snap-start md:snap-always`가 전제다.
+
+- 전역(`html`)에 걸면 목록·상세 페이지까지 스냅이 따라온다. 그래서 Home 래퍼로 옮겼다
+- 모바일(`md` 미만)은 스냅을 해제한다 — 콘텐츠가 뷰포트보다 길 때 잘리지 않도록 ([4. 결정 기록] 18번)
+- 섹션 높이 규칙을 바꾸면 스냅 동작이 깨진다
 
 ### 6. Vercel 배포 시 라우팅
 React Router 사용 시 `/projects/xxx`로 직접 접근하면 404가 발생한다.
