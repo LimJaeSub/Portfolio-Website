@@ -20,7 +20,7 @@ export const projects = [
     category: 'automation',
     featured: true,
     tags: ['Selenium', 'pytest', 'POM'],
-    period: '',
+    period: '2026.01',
     github: 'https://github.com/LimJaeSub/QA-Portfolio-Wanted',
     demo: '',
 
@@ -43,7 +43,7 @@ export const projects = [
     category: 'automation',
     featured: true,
     tags: ['Selenium', 'pytest', 'GitHub Actions', 'Allure'],
-    period: '',
+    period: '2026.01',
     github: 'https://github.com/LimJaeSub/qa-automation-pipeline',
     demo: '',
 
