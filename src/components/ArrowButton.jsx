@@ -4,10 +4,12 @@ function ArrowButton({ href, direction = 'down' }) {
     const el = document.getElementById(id)
     if (el) el.scrollIntoView({ behavior: 'smooth' })
   }
+
   return (
     <button
       onClick={scrollToSection}
-      className="w-10 h-10 rounded-full border-2 border-gray-300 dark:border-gray-600 flex items-center justify-center text-gray-400 hover:border-blue-500 hover:text-blue-500 dark:hover:border-blue-400 dark:hover:text-blue-400 transition-all animate-bounce"
+      aria-label={direction === 'down' ? '다음 섹션' : '이전 섹션'}
+      className="flex h-[36px] w-[36px] animate-bounce items-center justify-center rounded-full border border-neutral-300 text-text/55 transition-colors hover:border-accent hover:text-accent dark:border-neutral-800"
     >
       {direction === 'down' ? '↓' : '↑'}
     </button>

@@ -1,4 +1,4 @@
-import ArrowButton from './ArrowButton'
+import Section from './Section'
 
 const skills = [
   {
@@ -25,47 +25,22 @@ const skills = [
 
 function Skills() {
   return (
-    <section
-      id="skills"
-      className="h-screen flex flex-col justify-center px-12 relative bg-gray-50 dark:bg-gray-800"
-    >
-      <p className="text-sm tracking-widest text-blue-600 font-medium uppercase mb-2">
-        Skills
-      </p>
-      <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-12">
-        기술 스택
-      </h2>
-
-      <div className="grid grid-cols-3 gap-6">
+    <Section id="skills" label="Skills" title="기술 스택" prev="#projects">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-6">
         {skills.map((skill) => (
-          <div
-            key={skill.category}
-            className="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 hover:border-blue-400 transition-colors"
-          >
-            <p className="text-xs tracking-widest text-blue-600 uppercase font-medium mb-4">
+          <div key={skill.category} className="rounded-md bg-surface p-8 shadow-(--elev-sm)">
+            <p className="mb-5 text-[11px] font-medium tracking-[0.1em] text-accent-700 uppercase dark:text-accent-300">
               {skill.category}
             </p>
-            <ul className="flex flex-col gap-2">
+            <ul className="flex flex-col gap-3 text-[13.5px] text-text/80">
               {skill.items.map((item) => (
-                <li
-                  key={item}
-                  className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2"
-                >
-                  <span className="w-1.5 h-1.5 rounded-full bg-blue-600 flex-shrink-0" />
-                  {item}
-                </li>
+                <li key={item}>{item}</li>
               ))}
             </ul>
           </div>
         ))}
       </div>
-
-      {/* 위 화살표 */}
-      <div className="absolute top-10 left-1/2 -translate-x-1/2">
-        <ArrowButton href="#projects" direction="up" />
-      </div>
-
-    </section>
+    </Section>
   )
 }
 

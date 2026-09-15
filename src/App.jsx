@@ -1,23 +1,19 @@
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import './App.css'
 
-// components
-import MyPage from './components/MyPage.jsx'
-import Experience from './components/Experience.jsx'
-import Projects from './components/Projects.jsx'
-import Skills from './components/Skills.jsx'
-import SideNav from './components/SideNav.jsx'
+import Home from './pages/Home'
+import ProjectList from './pages/ProjectList'
+import ProjectDetail from './pages/ProjectDetail'
 
 function App() {
   return (
-    <div className="app">
-      <main>
-        <MyPage />
-        <Experience />
-        <Projects />
-        <Skills />
-        <SideNav />
-      </main>
-    </div>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/projects" element={<ProjectList />} />
+        <Route path="/projects/:id" element={<ProjectDetail />} />
+      </Routes>
+    </BrowserRouter>
   )
 }
 

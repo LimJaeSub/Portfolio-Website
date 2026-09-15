@@ -1,17 +1,82 @@
 @import "tailwindcss";
 
-/* scroll snap */
-html{
-    scroll-snap-type: y mandatory;
-    overflow-y : scroll;
-    height:100%;
+/* 다크모드는 .dark 클래스 하나로 토큰을 교체한다 (CLAUDE.md 8. 색상 적용 규칙) */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  /* ── Nocturne 모드 토큰 — 라이트가 기본값, 다크는 아래 .dark에서 교체 ── */
+  --color-bg: #f7f7fa;
+  --color-surface: #eeeef4;
+  --color-text: #1e2030;
+  --color-accent: #5d5294;
+  --color-divider: color-mix(in srgb, var(--color-text) 16%, transparent);
+
+  /* ── 톤 램프 — 라이트/다크 공통 ── */
+  --color-neutral-100: #f3f5fe;
+  --color-neutral-200: #e4e7f5;
+  --color-neutral-300: #cfd3e5;
+  --color-neutral-400: #b2b6ca;
+  --color-neutral-500: #9397ab;
+  --color-neutral-600: #75798c;
+  --color-neutral-700: #595d6c;
+  --color-neutral-800: #3f424d;
+  --color-neutral-900: #292b31;
+
+  --color-accent-100: #f5f4ff;
+  --color-accent-200: #e7e5fe;
+  --color-accent-300: #d2cefd;
+  --color-accent-400: #b5abfc;
+  --color-accent-500: #968ae0;
+  --color-accent-600: #796cbf;
+  --color-accent-700: #5d5294;
+  --color-accent-800: #423a6a;
+  --color-accent-900: #2b2741;
+
+  /*
+   * 이슈 타입/상태 색상 (CLAUDE.md 6. 이슈 타입별 색상).
+   * Nocturne 팔레트에는 초록/빨강이 없어 이 3쌍만 새로 정의했다.
+   * accent-200 / accent-800과 같은 명도 단계에 맞춰 잡은 값 — 디자인 확인 필요.
+   */
+  --color-story-200: #d9f0e3;
+  --color-story-800: #2f5744;
+  --color-task-200: #dce7fb;
+  --color-task-800: #2c4570;
+  --color-bug-200: #fadfdf;
+  --color-bug-800: #6b3434;
+
+  --font-sans: "Inter", system-ui, sans-serif;
+
+  /* 간격 스케일 — space-1 = 2.8px … space-8 = 22.4px */
+  --spacing: 2.8px;
+
+  --radius-sm: 4px;
+  --radius-md: 8px;
+  --radius-lg: 14px;
 }
 
-body{
-    height:100%;
+/*
+ * 그림자는 @theme에 두지 않는다.
+ * Tailwind가 shadow-* 유틸에 값을 문자열로 인라인해서 .dark 교체가 통하지 않는다.
+ * 일반 변수로 두고 shadow-(--elev-*) 로 참조한다.
+ */
+:root {
+  --elev-sm: 0 0 0 1px #cfd3e5;
+  --elev-md: 0 0 0 1px #e4e7f5, 0 6px 18px rgba(30, 32, 48, 0.1);
+  --elev-lg: 0 0 0 1px #cfd3e5, 0 16px 40px rgba(30, 32, 48, 0.16);
 }
 
-section{
-    scroll-snap-align: start;
-    scroll-snap-stop: always;
+.dark {
+  --color-bg: #161826;
+  --color-surface: #232532;
+  --color-text: #e9e9ed;
+  --color-accent: #9184d9;
+
+  --elev-sm: 0 0 0 1px #3f424d;
+  --elev-md: 0 0 0 1px #595d6c, 0 6px 18px rgba(0, 0, 0, 0.55);
+  --elev-lg: 0 0 0 1px #9397ab, 0 16px 40px rgba(0, 0, 0, 0.65);
+}
+
+body {
+  background: var(--color-bg);
+  color: var(--color-text);
 }
