@@ -46,6 +46,7 @@ function SideNav() {
         {sections.map(({ id, label }) => (
           <button
             key={id}
+            id={`nav-${id}`}
             onClick={() => scrollToSection(id)}
             aria-label={label}
             aria-current={active === id ? 'true' : undefined}

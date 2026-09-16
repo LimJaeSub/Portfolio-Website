@@ -4,6 +4,7 @@ import Tag from './Tag'
 function ProjectCard({ project }) {
   return (
     <Link
+      id={`project-card-${project.id}`}
       to={`/projects/${project.id}`}
       className="block rounded-md bg-surface p-8 shadow-(--elev-sm) transition-shadow hover:shadow-[0_0_0_1px_var(--color-accent)]"
     >

@@ -18,6 +18,11 @@ const COLUMN_DOT = {
   Done: 'bg-story-800 dark:bg-story-200',
 }
 
+/* 'In Progress' 같은 표시용 문자열을 id로 쓰기 위한 변환 — 'in-progress' */
+function toId(value) {
+  return value.toLowerCase().replace(/\s+/g, '-')
+}
+
 function ProjectDetail() {
   const { id } = useParams()
   const [activeTab, setActiveTab] = useState('overview')
@@ -105,6 +110,7 @@ function ProjectDetail() {
         {tabs.map((tab) => (
           <button
             key={tab.id}
+            id={`tab-${tab.id}`}
             onClick={() => setActiveTab(tab.id)}
             className={`rounded-md border px-4 py-2 text-[13px] transition-colors ${
               activeTab === tab.id
@@ -207,6 +213,7 @@ function ProjectDetail() {
               {['all', ...project.sprints].map((value) => (
                 <button
                   key={value}
+                  id={`sprint-${toId(value)}`}
                   onClick={() => setSprint(value)}
                   className={`rounded-sm border px-3 py-1 text-[12px] transition-colors ${
                     sprint === value
@@ -224,7 +231,11 @@ function ProjectDetail() {
             {COLUMNS.map((column) => {
               const columnIssues = visibleIssues.filter((issue) => issue.status === column)
               return (
-                <div key={column} className="flex flex-col gap-3">
+                <div
+                  key={column}
+                  id={`column-${toId(column)}`}
+                  className="flex flex-col gap-3"
+                >
                   <p className="flex items-center gap-2 text-[11px] font-medium tracking-[0.1em] text-text/55 uppercase">
                     <span className={`h-2 w-2 rounded-full ${COLUMN_DOT[column]}`} />
                     {column} ({columnIssues.length})

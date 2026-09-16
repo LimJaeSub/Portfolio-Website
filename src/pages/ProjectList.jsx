@@ -30,6 +30,7 @@ function ProjectList() {
         {filters.map(({ value, label }) => (
           <button
             key={value}
+            id={`filter-${value}`}
             onClick={() => setCategory(value)}
             className={`rounded-md border px-4 py-2 text-[13px] transition-colors ${
               category === value

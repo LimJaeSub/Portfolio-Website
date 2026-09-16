@@ -12,6 +12,7 @@ function Projects({ projects }) {
       </div>
 
       <Link
+        id="link-all-projects"
         to="/projects"
         className="mt-6 inline-flex text-[13px] font-medium text-accent hover:underline"
       >

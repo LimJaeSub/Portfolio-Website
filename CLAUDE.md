@@ -144,8 +144,7 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 ## 미확정 사항
 
 > **임재섭 확인이 필요한 것** (Claude Code는 확인 전까지 문서의 제안대로 진행)
-- 테마 토글 버튼 위치 — SideNav 하단 제안. 상세 페이지에는 SideNav가 없어 그곳 배치 미정
-- 테스트 셀렉터 전략 — 역할 기반 + `data-testid` 제안 ([8. 테스트 셀렉터 전략])
+- 상세 페이지의 테마 토글 위치 — 그 화면에는 SideNav가 없다 (결정 38)
 
 > **내용을 채워야 하는 것**
 - 기존 프로젝트 2개(Wanted, CI/CD)의 회고 내용 작성
@@ -200,6 +199,8 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 | 34 | 테마 상태는 `'dark' \| 'light'` 2값. `'system'`을 두지 않음 | 토글 버튼이 2상태인데 내부가 3상태면 "지금 뭘 누른 건가"가 모호해진다. 시스템 설정은 최초 진입 기본값을 정할 때만 참조 |
 | 35 | `.dark` 클래스는 `<body>`가 아닌 `<html>`에 | 스크롤바 색상과 `color-scheme`이 루트 기준으로 동작한다 |
 | 36 | 테스트 셀렉터를 **Phase 4에서 미리** 부여 | Phase 5에 몰아서 하면 이미 만든 컴포넌트를 전부 다시 열어야 한다. 만들 때 함께 넣으면 재작업이 없다 |
+| 37 | 테스트 셀렉터는 `data-testid`가 아니라 **HTML `id`** | 섹션 4개가 이미 `id`를 갖고 있어(스크롤 이동용) 속성 체계를 하나로 통일. 단 `id`는 문서 내 유일해야 하므로 반복 요소는 데이터 키를 붙인다 (`project-card-<id>`) |
+| 38 | 테마 토글 버튼은 **우측 SideNav 하단** | 상단 헤더가 없어([4] 19번) 전역 컨트롤을 둘 곳이 SideNav뿐이다. 상세 페이지에는 SideNav가 없어 그곳 배치는 여전히 미정 |
 
 ---
 
@@ -605,8 +606,8 @@ tag  라이트 → bg accent-200 / text accent-800
 
 ## 다크/라이트 토글 사양 (Phase 4)
 
-> ⚠️ **일부는 임재섭 확인 필요 — 아래 "확인 필요" 표시된 항목.**
-> 확인 전까지는 이 사양대로 구현하되, 다르면 알려줄 것.
+> 2026-09-16 확정. 아래 사양대로 구현한다.
+> 남은 미정은 **상세 페이지의 토글 위치** 하나뿐이다 (그 화면에는 SideNav가 없다).
 
 ### 상태 위치
 - Redux Toolkit 슬라이스 `theme`에 둔다 (결정 12·17·28)
@@ -630,20 +631,27 @@ React가 마운트되기 전에 라이트 화면이 한 번 번쩍인다.
 ```html
 <script>
   (function () {
-    var t = localStorage.getItem('theme')
+    var t = null
+    try { t = localStorage.getItem('theme') } catch (e) { /* 시크릿 모드·사이트 데이터 차단 */ }
     if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
     if (t === 'dark') document.documentElement.classList.add('dark')
   })()
 </script>
 ```
 
+> `localStorage` 접근은 **반드시 try/catch로 감싼다.**
+> 시크릿 모드나 사이트 데이터 차단 환경에서 `getItem`이 예외를 던지는데,
+> `<head>`의 인라인 스크립트라 여기서 멈추면 **이후 렌더가 통째로 중단된다.**
+> Redux 슬라이스의 초기값 판정에도 같은 처리가 필요하다.
+
 > 이 스크립트와 Redux 초기값은 **같은 판정 로직**이어야 한다.
 > 어긋나면 첫 화면과 토글 상태가 불일치한다.
 
-### 토글 버튼 위치 — **확인 필요**
-- 제안: 우측 SideNav 리모콘 하단 (현재 장식용 원형이 있는 자리)
+### 토글 버튼 위치 — 확정 (결정 38)
+- 우측 SideNav 리모콘 하단 (현재 장식용 원형이 있는 자리)
 - 근거: 상단 헤더가 없으므로([4] 19번) 전역 컨트롤을 둘 곳이 SideNav뿐이다
-- 상세 페이지에는 SideNav가 없다 → **그곳에서는 토글을 어디에 둘지 미정**
+- `id="theme-toggle"`
+- 상세 페이지에는 SideNav가 없다 → **그곳 배치는 여전히 미정** ([3. 미확정 사항])
 
 ### 접근성
 - 버튼에 `aria-label` 필수 (아이콘만 있으므로)
@@ -704,36 +712,58 @@ import './App.css'
 - 색상은 반드시 디자인 토큰 변수를 통해 사용한다 (`bg-surface`, `text-accent` 등)
   Tailwind 기본 색상(`gray-900`, `blue-600` 등)을 직접 쓰지 않는다
 
-## 테스트 셀렉터 전략 — **확인 필요**
+## 테스트 셀렉터 전략
 
-> **지금 정해야 하는 이유:** Phase 5에서 Playwright를 붙일 때 셀렉터가 없으면
-> 이미 만든 컴포넌트를 전부 다시 열어 속성을 추가해야 한다.
-> Phase 4를 진행하면서 함께 넣으면 그 재작업이 없다.
+> 2026-09-16 확정. `data-testid`가 아니라 **HTML `id`** 를 쓴다 (결정 37).
 
-### 제안하는 방식 — 역할 기반 우선, 구조에는 `data-testid`
+### 방식 — 역할 기반 우선, 구조에는 `id`
 
 | 대상 | 셀렉터 | 이유 |
 |---|---|---|
 | 버튼·링크 등 인터랙티브 | `getByRole` + `aria-label` | 접근성 속성과 테스트 훅을 겸한다. 따로 관리할 게 늘지 않는다 |
-| 섹션·카드 등 구조 | `data-testid` | 한국어 문구는 자주 바뀐다. 텍스트 기반 셀렉터는 깨진다 |
+| 섹션·카드 등 구조 | `id` | 한국어 문구는 자주 바뀐다. 텍스트 기반 셀렉터는 깨진다 |
 | 본문 내용 검증 | `getByText` | 내용 자체가 검증 대상일 때만 |
 
-### `data-testid` 명명 규칙
+### ⚠️ `id`는 문서 내 유일해야 한다
+
+`data-testid`와 달리 `id`는 중복될 수 없다.
+그래서 **반복 요소는 데이터 키를 붙여 유일하게 만든다.**
+
 ```
-section-mypage        섹션
-project-card          반복되는 카드 (nth로 접근)
-tab-issues            탭
-theme-toggle          단일 컨트롤
+project-card-portfolio-website    반복 카드 — 프로젝트 id를 붙임
+issue-pw-7                        반복 이슈 — 이슈 id를 붙임
 ```
-- kebab-case, 영문
+
+인덱스(`project-card-1`)를 쓰지 않는다. 순서가 바뀌면 깨진다.
+데이터 키를 쓰면 순서와 무관하게 같은 요소를 가리킨다.
+
+### 명명 규칙
+```
+mypage / experience / projects / skills   섹션 (이미 존재 — 스크롤 이동에도 쓰임)
+project-card-<프로젝트 id>                 프로젝트 카드
+tab-<탭 id>                                상세 페이지 탭
+filter-<카테고리>                          목록 페이지 카테고리 필터
+sprint-<스프린트>                          이슈 보드 스프린트 필터
+column-<상태>                              칸반 컬럼
+nav-<섹션 id>                              SideNav 버튼
+theme-toggle                              테마 토글 (Phase 4)
+```
+- kebab-case, 영문 소문자
 - **컴포넌트명이 아니라 역할**로 짓는다 (`ProjectCard` → `project-card`)
-- 반복 요소는 인덱스를 붙이지 않는다. Playwright의 `.nth()`로 접근한다
+- 표시용 문자열을 id로 쓸 때는 공백을 하이픈으로 바꾼다
+  (`'In Progress'` → `column-in-progress`). `ProjectDetail.jsx`의 `toId()` 사용
 
 ### 붙이는 위치
 - 각 섹션 최상위 엘리먼트
 - 프로젝트 카드 최상위
-- 탭 버튼, 필터 버튼, 테마 토글
+- 탭 버튼, 필터 버튼, 칸반 컬럼, SideNav 버튼, 테마 토글
 - **본문 텍스트 하나하나에는 붙이지 않는다.** 과하면 마크업이 지저분해진다
+
+### 섹션 id는 기능도 겸한다
+`mypage` `experience` `projects` `skills`는 `scrollIntoView`와
+IntersectionObserver가 참조한다. **이름을 바꾸면 내비게이션이 깨진다.**
+바꿔야 한다면 `SideNav.jsx`의 `sections` 배열과
+각 섹션의 `prev`/`next` prop을 함께 고쳐야 한다.
 
 ---
 ## 커밋 메시지 컨벤션
@@ -790,7 +820,7 @@ npm run build    # 통과
 - [ ] 린트·빌드 통과
 - [ ] 다크·라이트 **양쪽**에서 화면 확인 (한쪽만 보고 끝내지 않는다)
 - [ ] 세로 768px 화면에서 잘림 없음 ([8. 레이아웃 규칙])
-- [ ] 새로 만든 인터랙티브 요소에 `aria-label` / `data-testid` 부여
+- [ ] 새로 만든 인터랙티브 요소에 `aria-label` / `id` 부여 ([8. 테스트 셀렉터 전략])
 - [ ] 변경한 파일 목록과 이유를 보고
 
 ### 문서 갱신
