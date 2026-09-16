@@ -67,7 +67,7 @@ export const projects = [
     tags: ['React', 'Tailwind', 'Playwright', 'Jira'],
     period: '2026.03 ~ 진행 중',
     github: 'https://github.com/LimJaeSub/Portfolio-Website',
-    demo: '',
+    demo: 'https://jasubwebsite.vercel.app',
 
     overview: {
       description:
@@ -96,12 +96,12 @@ export const projects = [
         { text: '프로젝트 카드 클릭 시 상세 페이지로 이동한다', done: true },
         { text: '산출물이 없는 프로젝트는 해당 탭이 노출되지 않는다', done: true },
         { text: '다크/라이트 토글이 동작한다', done: false },
-        { text: 'Vercel에 배포되어 외부에서 접속된다', done: false },
+        { text: 'Vercel에 배포되어 외부에서 접속된다', done: true },
         { text: 'Playwright E2E 테스트가 통과한다', done: false },
       ],
     },
 
-    // 스프린트는 CLAUDE.md 11. 로드맵의 Phase를 그대로 사용한다
+    // 스프린트는 CLAUDE.md 14. 로드맵의 Phase를 그대로 사용한다
     sprints: ['Phase 1', 'Phase 2', 'Phase 3', 'Phase 4', 'Phase 5'],
 
     issues: [
@@ -113,7 +113,7 @@ export const projects = [
       { id: 'PW-6', title: 'SideNav 구현 및 섹션 이동 애니메이션', type: 'Story', status: 'Done', sprint: 'Phase 1' },
       { id: 'PW-7', title: 'Nocturne 디자인 시스템으로 리뉴얼', type: 'Story', status: 'Done', sprint: 'Phase 2' },
       { id: 'PW-8', title: 'React Router 도입 및 프로젝트 상세 페이지 구현', type: 'Story', status: 'Done', sprint: 'Phase 2' },
-      { id: 'PW-9', title: 'Vercel 배포', type: 'Task', status: 'To Do', sprint: 'Phase 3' },
+      { id: 'PW-9', title: 'Vercel 배포', type: 'Task', status: 'Done', sprint: 'Phase 3' },
       { id: 'PW-10', title: '다크/라이트 토글 (Redux Toolkit)', type: 'Story', status: 'To Do', sprint: 'Phase 4' },
       { id: 'PW-11', title: 'Playwright E2E 테스트 작성', type: 'Story', status: 'To Do', sprint: 'Phase 5' },
     ],
@@ -142,6 +142,12 @@ export const projects = [
         title: '스크롤 스냅이 상세 페이지까지 따라옴',
         content:
           'scroll-snap-type을 html에 걸어둔 탓에 React Router로 추가한 목록·상세 페이지에서도 스냅이 동작했다. 스냅을 전역이 아니라 메인 페이지 래퍼에만 Tailwind 유틸(snap-y snap-mandatory)로 적용하도록 변경. 모바일에서는 콘텐츠가 잘리지 않도록 스냅을 해제했다.',
+      },
+      {
+        date: '2026-09-16',
+        title: '회고와 개발 일지의 필드 모양이 달랐다',
+        content:
+          'retrospective를 devLog와 같은 모양(date/title/content)으로 가정하고 렌더링해두었는데, 스키마상 회고는 { topic, content }로 날짜가 없다. 당시 회고 데이터가 비어 있어 화면상 문제가 드러나지 않았고, 회고를 채우는 순간 날짜 칸이 비고 제목이 사라졌을 상황이었다. 렌더링을 분기해 해결. 데이터가 비어 있으면 잘못된 렌더링 코드도 멀쩡해 보인다는 걸 배웠다.',
       },
     ],
   },
