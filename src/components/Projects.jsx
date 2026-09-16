@@ -1,13 +1,12 @@
 import { Link } from 'react-router-dom'
 import Section from './Section'
 import ProjectCard from './ProjectCard'
-import { featuredProjects } from '../data/projects'
 
-function Projects() {
+function Projects({ projects }) {
   return (
     <Section id="projects" label="Projects" title="프로젝트" prev="#experience" next="#skills">
       <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-6">
-        {featuredProjects.map((project) => (
+        {projects.map((project) => (
           <ProjectCard key={project.id} project={project} />
         ))}
       </div>
