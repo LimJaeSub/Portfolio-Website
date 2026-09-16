@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet><link rel="stylesheet" href="_ds/nocturne-0bd3b241-e5e0-4f37-9dec-d4e4f25ea7b4/styles.css"><script src="_ds/nocturne-0bd3b241-e5e0-4f37-9dec-d4e4f25ea7b4/_ds_bundle.js"></script><style>
+html,body{margin:0;background:var(--color-bg);color:var(--color-text);font-family:var(--font-body)}
+@keyframes nudge{0%,100%{transform:translateY(0);opacity:.55}50%{transform:translateY(5px);opacity:1}}
+:focus-visible{outline:2px solid var(--color-accent);outline-offset:2px}
+a{color:var(--color-accent-300)}a:hover{color:var(--color-accent-200)}
+</style></helmet>
+
+<div style="max-width:1180px;margin:0 auto;padding:0 clamp(20px,5vw,72px)">
+
+  <header style="position:sticky;top:0;z-index:30;display:flex;justify-content:space-between;align-items:center;padding:16.8px 0;background:color-mix(in srgb,var(--color-bg) 88%,transparent);backdrop-filter:blur(8px)">
+    <span style="font-size:13px;font-weight:500;letter-spacing:-.01em">임재섭</span>
+    <nav style="display:flex;gap:22.4px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-neutral-500)">
+      <a href="#experience" onClick="{{ goExperience }}" style="text-decoration:none;color:inherit" style-hover="color:var(--color-accent-300)">Experience</a>
+      <a href="#projects" onClick="{{ goProjects }}" style="text-decoration:none;color:inherit" style-hover="color:var(--color-accent-300)">Projects</a>
+      <a href="#skills" onClick="{{ goSkills }}" style="text-decoration:none;color:inherit" style-hover="color:var(--color-accent-300)">Skills</a>
+    </nav>
+  </header>
+
+  <section id="mypage" data-screen-label="Hero" style="min-height:calc(100svh - 58px);display:flex;flex-direction:column;justify-content:center;align-items:flex-start;gap:16.8px;padding:56px 0 72px">
+    <span style="font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--color-accent-300)">QA Engineer</span>
+    <h1 style="margin:0;font-size:clamp(46px,8vw,76px);font-weight:500;letter-spacing:-.03em;line-height:1.02">임재섭</h1>
+    <p style="margin:0;max-width:44ch;font-size:16px;line-height:1.65;color:var(--color-neutral-400)">한국정보통신기술협회(TTA) 소프트웨어 테스팅 엔지니어 · 2년. GS 인증 16건을 진행하며 기능·부하·보안 테스트를 설계하고, Selenium과 Playwright로 자동화까지 만듭니다.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8.4px;margin-top:11.2px">
+      <a class="btn btn-primary" href="https://github.com/LimJaeSub" target="_blank" rel="noreferrer" style="text-decoration:none">GitHub</a>
+      <a class="btn btn-secondary" href="mailto:liso_o@naver.com" style="text-decoration:none">이메일 연락</a>
+    </div>
+    <div style="display:flex;flex-wrap:wrap;gap:16.8px;margin-top:5.6px;font-size:12.5px;color:var(--color-neutral-600)"><span>liso_o@naver.com</span><span>010-9340-3327</span></div>
+    <button onClick="{{ goExperience }}" aria-label="다음 섹션" style="margin-top:33.6px;width:36px;height:36px;border-radius:999px;border:1px solid var(--color-neutral-800);background:transparent;color:var(--color-neutral-400);cursor:pointer;animation:nudge 1.8s ease-in-out infinite" style-hover="border-color:var(--color-accent);color:var(--color-accent-300)">↓</button>
+  </section>
+
+  <section id="experience" data-screen-label="Experience" style="padding:88px 0;scroll-margin-top:58px">
+    <h6 style="margin:0 0 5.6px;color:var(--color-accent-300)">Experience</h6>
+    <h2 style="margin:0 0 33.6px;font-size:clamp(28px,4vw,38px);font-weight:500;letter-spacing:-.02em">경력 &amp; 자격</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:22.4px;align-items:start">
+      <div class="card elev-sm" style="padding:28px">
+        <p class="card-kicker" style="margin:0 0 16.8px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-300)">Work Experience</p>
+        <h3 style="margin:0;font-size:22px;font-weight:500;letter-spacing:-.015em">한국정보통신기술협회 (TTA)</h3>
+        <p style="margin:5.6px 0 22.4px;font-size:13px;color:var(--color-neutral-500)">소프트웨어 테스팅 엔지니어 · 2년</p>
+        <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:11.2px">
+          <li style="display:flex;gap:11.2px;font-size:13.5px;line-height:1.6;color:var(--color-neutral-300)"><span style="width:14px;height:1px;background:var(--color-accent);flex:none;margin-top:11px"></span>GS 인증 16건 진행</li>
+          <li style="display:flex;gap:11.2px;font-size:13.5px;line-height:1.6;color:var(--color-neutral-300)"><span style="width:14px;height:1px;background:var(--color-accent);flex:none;margin-top:11px"></span>시험당 평균 TC 180개 작성 &amp; 결함 평균 20~30개 발견 및 회귀테스트</li>
+          <li style="display:flex;gap:11.2px;font-size:13.5px;line-height:1.6;color:var(--color-neutral-300)"><span style="width:14px;height:1px;background:var(--color-accent);flex:none;margin-top:11px"></span>메뉴 트리 기반 기능 테스트 및 Jmeter를 활용한 부하 테스트 수행</li>
+          <li style="display:flex;gap:11.2px;font-size:13.5px;line-height:1.6;color:var(--color-neutral-300)"><span style="width:14px;height:1px;background:var(--color-accent);flex:none;margin-top:11px"></span>Invicti 보안 스캔 — HSTS 설정 미흡, 구버전 소프트웨어, 쿠키 HttpOnly 미설정 등 보안 취약점 발견</li>
+          <li style="display:flex;gap:11.2px;font-size:13.5px;line-height:1.6;color:var(--color-neutral-300)"><span style="width:14px;height:1px;background:var(--color-accent);flex:none;margin-top:11px"></span>테스트 케이스 &amp; 결함 리포트 excel로 작성하여 결함 추적</li>
+        </ul>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:11.2px">
+        <p style="margin:0 0 5.6px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-300)">Certifications</p>
+        <div class="card elev-sm" style="padding:22.4px">
+          <p style="margin:0;font-size:16px;font-weight:500">ISTQB CTFL</p>
+          <p style="margin:2.8px 0 5.6px;font-size:11px;letter-spacing:.08em;color:var(--color-accent-300)">ISTQB</p>
+          <p style="margin:0;font-size:13.5px;color:var(--color-neutral-400)">국제 소프트웨어 테스팅 자격증 Foundation Level</p>
+        </div>
+        <div class="card elev-sm" style="padding:22.4px">
+          <p style="margin:0;font-size:16px;font-weight:500">CSTS Foundation</p>
+          <p style="margin:2.8px 0 5.6px;font-size:11px;letter-spacing:.08em;color:var(--color-accent-300)">TTA</p>
+          <p style="margin:0;font-size:13.5px;color:var(--color-neutral-400)">한국 소프트웨어 테스팅 자격증 Foundation Level</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div style="height:1px;background:linear-gradient(90deg,transparent,var(--color-neutral-800) 48px,var(--color-neutral-800) calc(100% - 48px),transparent)"></div>
+
+  <section id="projects" data-screen-label="Projects" style="padding:88px 0;scroll-margin-top:58px">
+    <h6 style="margin:0 0 5.6px;color:var(--color-accent-300)">Projects</h6>
+    <h2 style="margin:0 0 33.6px;font-size:clamp(28px,4vw,38px);font-weight:500;letter-spacing:-.02em">프로젝트</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16.8px">
+      <button onClick="{{ openWanted }}" style="text-align:left;font-family:inherit;cursor:pointer;background:var(--color-surface);box-shadow:var(--shadow-sm);border:0;border-radius:var(--radius-md);padding:22.4px;color:inherit" style-hover="box-shadow:0 0 0 1px var(--color-accent)">
+        <p style="margin:0 0 5.6px;font-size:16px;font-weight:500">Wanted 자동화 테스트</p>
+        <p style="margin:0 0 16.8px;font-size:13.5px;line-height:1.55;color:var(--color-neutral-400)">Wanted 홈페이지 Selenium 자동화 테스트</p>
+        <div style="display:flex;flex-wrap:wrap;gap:5.6px"><span class="tag tag-accent">Selenium</span><span class="tag tag-accent">pytest</span><span class="tag tag-accent">POM</span></div>
+      </button>
+      <button onClick="{{ openPipeline }}" style="text-align:left;font-family:inherit;cursor:pointer;background:var(--color-surface);box-shadow:var(--shadow-sm);border:0;border-radius:var(--radius-md);padding:22.4px;color:inherit" style-hover="box-shadow:0 0 0 1px var(--color-accent)">
+        <p style="margin:0 0 5.6px;font-size:16px;font-weight:500">CI/CD 파이프라인</p>
+        <p style="margin:0 0 16.8px;font-size:13.5px;line-height:1.55;color:var(--color-neutral-400)">automationexercise.com 대상 CI/CD 구축</p>
+        <div style="display:flex;flex-wrap:wrap;gap:5.6px"><span class="tag tag-accent">Selenium</span><span class="tag tag-accent">pytest</span><span class="tag tag-accent">GitHub Actions</span><span class="tag tag-accent">Allure</span></div>
+      </button>
+      <button onClick="{{ openSite }}" style="text-align:left;font-family:inherit;cursor:pointer;background:var(--color-surface);box-shadow:var(--shadow-sm);border:0;border-radius:var(--radius-md);padding:22.4px;color:inherit" style-hover="box-shadow:0 0 0 1px var(--color-accent)">
+        <p style="margin:0 0 5.6px;font-size:16px;font-weight:500">포트폴리오 사이트</p>
+        <p style="margin:0 0 16.8px;font-size:13.5px;line-height:1.55;color:var(--color-neutral-400)">기획 → 개발 → 테스트 → 배포 SDLC 연습</p>
+        <div style="display:flex;flex-wrap:wrap;gap:5.6px"><span class="tag tag-accent">React</span><span class="tag tag-accent">Tailwind</span><span class="tag tag-accent">Playwright</span><span class="tag tag-accent">Jira</span></div>
+      </button>
+    </div>
+  </section>
+
+  <div style="height:1px;background:linear-gradient(90deg,transparent,var(--color-neutral-800) 48px,var(--color-neutral-800) calc(100% - 48px),transparent)"></div>
+
+  <section id="skills" data-screen-label="Skills" style="padding:88px 0 112px;scroll-margin-top:58px">
+    <h6 style="margin:0 0 5.6px;color:var(--color-accent-300)">Skills</h6>
+    <h2 style="margin:0 0 33.6px;font-size:clamp(28px,4vw,38px);font-weight:500;letter-spacing:-.02em">기술 스택</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16.8px">
+      <div class="card elev-sm" style="padding:22.4px">
+        <p style="margin:0 0 14px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-300)">Test Automation</p>
+        <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8.4px;font-size:13.5px;color:var(--color-neutral-300)">
+          <li>Selenium WebDriver</li><li>Playwright</li><li>pytest</li><li>POM 패턴</li>
+        </ul>
+      </div>
+      <div class="card elev-sm" style="padding:22.4px">
+        <p style="margin:0 0 14px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-300)">CI/CD &amp; Reporting</p>
+        <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8.4px;font-size:13.5px;color:var(--color-neutral-300)">
+          <li>GitHub Actions</li><li>Allure Report</li>
+        </ul>
+      </div>
+      <div class="card elev-sm" style="padding:22.4px">
+        <p style="margin:0 0 14px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-300)">API &amp; Performance</p>
+        <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8.4px;font-size:13.5px;color:var(--color-neutral-300)">
+          <li>requests (Python)</li><li>Postman</li><li>JMeter</li>
+        </ul>
+      </div>
+      <div class="card elev-sm" style="padding:22.4px">
+        <p style="margin:0 0 14px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-300)">QA &amp; 협업 도구</p>
+        <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8.4px;font-size:13.5px;color:var(--color-neutral-300)">
+          <li>Jira (Scrum)</li><li>Confluence</li>
+        </ul>
+      </div>
+      <div class="card elev-sm" style="padding:22.4px">
+        <p style="margin:0 0 14px;font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--color-accent-300)">Language</p>
+        <ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8.4px;font-size:13.5px;color:var(--color-neutral-300)">
+          <li>Python</li><li>Java (기초)</li><li>HTML / CSS / Javascript</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer style="display:flex;flex-wrap:wrap;gap:16.8px;justify-content:space-between;padding:22.4px 0 44px;border-top:1px solid var(--color-neutral-900);font-size:12.5px;color:var(--color-neutral-600)">
+    <span>임재섭 · QA Engineer</span>
+    <span>liso_o@naver.com · 010-9340-3327</span>
+  </footer>
+</div>
+
+<sc-if value="{{ showRemote }}" hint-placeholder-val="{{ true }}">
+<nav aria-label="섹션 이동" style="position:fixed;right:clamp(10px,2vw,24px);top:50%;transform:translateY(-50%);z-index:40;display:flex;flex-direction:column;align-items:center;gap:14px;padding:16.8px 11.2px;border-radius:999px;background:var(--color-surface);box-shadow:var(--shadow-md)">
+  <span style="width:20px;height:4px;border-radius:999px;background:var(--color-neutral-800)"></span>
+  <button onClick="{{ goMypage }}" aria-label="MyPage" style="{{ dotMypage }}"></button>
+  <button onClick="{{ goExperience }}" aria-label="Experience" style="{{ dotExperience }}"></button>
+  <button onClick="{{ goProjects }}" aria-label="Projects" style="{{ dotProjects }}"></button>
+  <button onClick="{{ goSkills }}" aria-label="Skills" style="{{ dotSkills }}"></button>
+  <span style="width:18px;height:18px;border-radius:999px;border:1px solid var(--color-neutral-800)"></span>
+</nav>
+</sc-if>
+
+<sc-if value="{{ modalOpen }}">
+<div onClick="{{ closeModal }}" style="position:fixed;inset:0;z-index:60;display:flex;align-items:center;justify-content:center;padding:24px;background:rgba(0,0,0,.6)">
+  <div onClick="{{ stop }}" role="dialog" aria-modal="true" style="width:100%;max-width:520px;background:var(--color-surface);border-radius:var(--radius-lg);box-shadow:var(--shadow-lg);padding:28px">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:16.8px">
+      <h3 style="margin:0;font-size:22px;font-weight:500;letter-spacing:-.015em">{{ modalTitle }}</h3>
+      <button onClick="{{ closeModal }}" aria-label="닫기" style="flex:none;width:30px;height:30px;border-radius:var(--radius-sm);border:1px solid var(--color-neutral-800);background:transparent;color:var(--color-neutral-400);cursor:pointer" style-hover="border-color:var(--color-accent);color:var(--color-accent-300)">✕</button>
+    </div>
+    <p style="margin:14px 0 22.4px;font-size:14px;line-height:1.7;color:var(--color-neutral-300)">{{ modalBody }}</p>
+    <div style="display:flex;flex-wrap:wrap;gap:5.6px;margin-bottom:22.4px">{{ modalTags }}</div>
+    <a class="btn btn-primary" href="{{ modalLink }}" target="_blank" rel="noreferrer" style="text-decoration:none">GitHub ↗</a>
+  </div>
+</div>
+</sc-if>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;sideNav&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;remote&quot;,&quot;none&quot;],&quot;default&quot;:&quot;remote&quot;,&quot;tsType&quot;:&quot;'remote' | 'none'&quot;}}">
+const PROJECTS = {
+  wanted: {
+    title: 'Wanted 자동화 테스트',
+    body: 'Wanted 홈페이지를 대상으로 Selenium WebDriver와 pytest를 활용한 E2E 자동화 테스트를 구현했습니다. POM 패턴을 적용해 유지보수성을 높였습니다.',
+    tags: ['Selenium', 'pytest', 'POM'],
+    link: 'https://github.com/LimJaeSub/QA-Portfolio-Wanted'
+  },
+  pipeline: {
+    title: 'CI/CD 파이프라인',
+    body: 'GitHub Actions를 통한 CI/CD 파이프라인을 구축하고, Allure Report로 테스트 결과를 시각화했습니다.',
+    tags: ['Selenium', 'pytest', 'GitHub Actions', 'Allure'],
+    link: 'https://github.com/LimJaeSub/qa-automation-pipeline'
+  },
+  site: {
+    title: '포트폴리오 사이트',
+    body: 'Jira/Confluence로 프로젝트를 관리하고 React로 개발, Playwright로 E2E 테스트까지 전체 SDLC를 직접 경험한 프로젝트입니다.',
+    tags: ['React', 'Tailwind', 'Playwright', 'Jira'],
+    link: 'https://github.com/LimJaeSub/Portfolio-Website'
+  }
+};
+const SECTIONS = ['mypage', 'experience', 'projects', 'skills'];
+
+class Component extends DCLogic {
+  state = { active: 'mypage', selected: null };
+
+  componentDidMount() {
+    this.io = new IntersectionObserver(
+      entries => entries.forEach(e => { if (e.isIntersecting) this.setState({ active: e.target.id }); }),
+      { threshold: 0.35 }
+    );
+    SECTIONS.forEach(id => { const el = document.getElementById(id); if (el) this.io.observe(el); });
+    this.onKey = e => { if (e.key === 'Escape') this.setState({ selected: null }); };
+    window.addEventListener('keydown', this.onKey);
+  }
+  componentWillUnmount() {
+    if (this.io) this.io.disconnect();
+    window.removeEventListener('keydown', this.onKey);
+  }
+
+  go(id) {
+    return e => {
+      if (e && e.preventDefault) e.preventDefault();
+      const el = document.getElementById(id);
+      const scroller = document.scrollingElement || document.documentElement;
+      if (el) scroller.scrollTo({ top: Math.max(0, el.offsetTop - 58), behavior: 'smooth' });
+    };
+  }
+
+  dot(id) {
+    const on = this.state.active === id;
+    return [
+      'width:26px;height:26px;border-radius:999px;cursor:pointer;display:block;padding:0',
+      on ? 'background:var(--color-accent-800);border:1px solid var(--color-accent)'
+         : 'background:transparent;border:1px solid var(--color-neutral-800)',
+      on ? 'box-shadow:0 0 0 3px color-mix(in srgb, var(--color-accent) 18%, transparent)' : ''
+    ].filter(Boolean).join(';');
+  }
+
+  renderVals() {
+    const p = this.state.selected ? PROJECTS[this.state.selected] : null;
+    return {
+      showRemote: (this.props.sideNav ?? 'remote') !== 'none',
+      goMypage: this.go('mypage'),
+      goExperience: this.go('experience'),
+      goProjects: this.go('projects'),
+      goSkills: this.go('skills'),
+      dotMypage: this.dot('mypage'),
+      dotExperience: this.dot('experience'),
+      dotProjects: this.dot('projects'),
+      dotSkills: this.dot('skills'),
+      openWanted: () => this.setState({ selected: 'wanted' }),
+      openPipeline: () => this.setState({ selected: 'pipeline' }),
+      openSite: () => this.setState({ selected: 'site' }),
+      closeModal: () => this.setState({ selected: null }),
+      stop: e => e.stopPropagation(),
+      modalOpen: !!p,
+      modalTitle: p ? p.title : '',
+      modalBody: p ? p.body : '',
+      modalLink: p ? p.link : '#',
+      modalTags: p ? p.tags.map(t =>
+        React.createElement('span', { key: t, className: 'tag tag-accent' }, t)) : null
+    };
+  }
+}
+</script>
+</body>
+</html>

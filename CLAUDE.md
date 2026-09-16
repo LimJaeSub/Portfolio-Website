@@ -44,21 +44,36 @@
 
 # 1. AI 협업 규칙
 
+> **이 섹션은 권고이지 강제가 아니다.**
+> AI가 이 규칙을 항상 지킨다는 보장은 없다. 적어두면 지킬 확률이 올라가는 정도다.
+> 반드시 막아야 하는 것은 문서가 아니라 도구로 강제한다
+> (`.claude/settings.json`의 `deny`, `.gitignore` 등).
+>
+> **따라서 최종 방어선은 커밋 전 `git diff` 확인이다.**
+
 ## 작업 전
 - 이 문서 전체를 읽고, 특히 **[3. 현재 상태]** 와 **[4. 결정 기록]** 을 확인한다.
 - 요청받은 작업이 [4. 결정 기록]과 충돌하면, 진행하지 말고 먼저 알린다.
 
 ## 작업 중
 - **요청받은 범위만 수정한다.** 요청하지 않은 파일은 건드리지 않는다.
+  → 변경 범위가 커지면 사람이 검수할 수 없게 되고, 검수 없는 커밋은 사고로 이어진다
 - 요청하지 않은 리팩토링, 코드 정리, 의존성 추가/변경을 하지 않는다.
+  → 같은 이유. "더 나아 보여서" 한 변경이 가장 추적하기 어렵다
 - 스택이나 구조를 바꿔야 한다고 판단되면, 실행하지 말고 이유와 함께 제안만 한다.
+  → 프로젝트 전체 방향은 이 문서와 PM만 알고 있다. 국소 최적이 전체 최적이 아니다
 - 요구사항이 애매하면 추측해서 진행하지 말고 질문한다.
+  → 잘못된 방향으로 완성된 코드는 미완성 코드보다 되돌리기 어렵다
 - 기존 컴포넌트/데이터를 재사용할 수 있는지 먼저 확인한다.
 
 ## 작업 후
 - 변경한 파일 목록과 변경 이유를 요약해 보고한다.
 - 새로운 결정이 발생했다면 [4. 결정 기록]에 추가할 내용을 제안한다.
 - [3. 현재 상태]를 갱신할 내용을 제안한다.
+- 막혔거나 선택한 것이 있으면 `portfolio.md`에 추가할 내용을 제안한다.
+
+> 마지막 세 줄이 이 문서가 살아 있게 하는 장치다.
+> 갱신되지 않는 문서는 다음 세션에 **잘못된 정보**를 준다. 없느니만 못하다.
 
 ## 하지 말 것
 - 임의로 다른 UI 라이브러리 도입 (MUI, Chakra, styled-components 등)
@@ -120,17 +135,25 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 - [x] React Router 도입 (`/projects`, `/projects/:id`)
 - [x] 프로젝트 상세 페이지 구현 (탭 4종, 데이터 없으면 미노출)
 - [x] 데이터를 `src/data/projects.js`로 이관
-- [x] CLAUDE.md를 레포에 포함 + `docs/portfolio-template.md` 신설
+- [x] **Vercel 배포** (Phase 3)
 
 ## 진행 중 / 다음 작업
-- [ ] **Vercel 배포** ← 현재 여기 (Phase 3)
-- [ ] 다크/라이트 토글 (Redux Toolkit) — Phase 4
-- [ ] Playwright E2E 테스트 — Phase 5
+- [ ] **다크/라이트 토글 (Redux Toolkit)** ← 현재 여기 (Phase 4)
+- [ ] Playwright E2E 테스트 (Phase 5)
 
 ## 미확정 사항
+
+> **임재섭 확인이 필요한 것** (Claude Code는 확인 전까지 문서의 제안대로 진행)
+- 테마 토글 버튼 위치 — SideNav 하단 제안. 상세 페이지에는 SideNav가 없어 그곳 배치 미정
+- 테스트 셀렉터 전략 — 역할 기반 + `data-testid` 제안 ([8. 테스트 셀렉터 전략])
+
+> **내용을 채워야 하는 것**
 - 기존 프로젝트 2개(Wanted, CI/CD)의 회고 내용 작성
 - 대표 프로젝트 3개 선정
 - 실무 프로젝트를 언제 추가할지
+
+> **정리해야 하는 것**
+- `portfolio.md` ↔ `projects.js` 이중 관리 — Phase 6 Firestore 이관 시 자연히 해소될지 검토
 
 ---
 
@@ -142,7 +165,7 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 | # | 결정 | 이유 |
 |---|------|------|
 | 1 | Vite + React 사용 (CRA/Next.js 아님) | CRA는 구식, Next.js는 SSR이 불필요한 이 규모에 과함. Vite가 가볍고 Playwright 연동도 용이 |
-| 2 | Tailwind CSS 사용 (styled-components 아님) | 다크모드를 `dark:` 접두사로 간단히 구현 가능. 동적 스타일링도 충분히 커버되고 번들 사이즈 이점 |
+| 2 | Tailwind CSS 사용 (styled-components 아님) | 설정 없이 바로 쓸 수 있고 번들 사이즈 이점. 동적 스타일링도 충분히 커버됨<br>⚠️ 도입 당시 근거였던 "`dark:` 접두사로 다크모드 구현"은 **결정 16 이후 폐기**됐다. 현재는 CSS 변수 교체 방식이다 ([8. 색상 적용 규칙]) |
 | 3 | Vite 7 / plugin-react 4로 다운그레이드 | Vite 8은 Tailwind 미지원. 최신 버전 유지보다 안정적 동작 우선 |
 | 4 | 우측 고정 사이드 Nav (상단 헤더 아님) | 풀페이지 스크롤 구조와 어울리고 개성 있는 레이아웃 |
 | 5 | CSS Scroll Snap으로 섹션 단위 스크롤 | 스크롤 1회에 섹션 1개 이동. 라이브러리 없이 CSS만으로 구현 가능 |
@@ -151,7 +174,7 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 | 8 | 프로젝트 상세는 **별도 페이지** (모달 아님) | 기획/이슈/일지까지 담기에 모달은 공간이 부족. React Router 경험도 함께 확보 |
 | 9 | Jira/Confluence 링크 대신 **사이트 내 자체 구현** | 외부 링크는 방문자가 볼 수 없음. SDLC 전 과정을 사이트 안에서 보여주는 것이 이 프로젝트의 차별점 |
 | 10 | 이슈는 **칸반 보드 형태**로 표시 | 단순 테이블보다 실제 Jira 보드의 느낌을 살릴 수 있음 |
-| 11 | 데이터는 `src/data/projects.js`에 하드코딩으로 시작 | Firestore는 Phase 5에서 도입. 스키마를 먼저 확정하고 그대로 이관 |
+| 11 | 데이터는 `src/data/projects.js`에 하드코딩으로 시작 | Firestore는 **Phase 6**에서 도입. 스키마를 먼저 확정하고 그대로 이관 |
 | 12 | 다크모드는 Redux Toolkit으로 구현 예정 | 전역 상태 관리가 필요한 기능. Redux 사용 경험을 포트폴리오에 포함 |
 | 13 | 백엔드 직접 구축 대신 Firebase 사용 예정 | 서버 관리 부담 없이 인증/DB 확보. REST API 형태라 API 테스트도 가능 |
 | 14 | 배포는 Vercel | GitHub 연동으로 push 시 자동 배포. 설정 간단하고 무료 |
@@ -168,9 +191,15 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 | 25 | 실무 프로젝트는 도구·기법·역할까지만 기술 | 고객사 정보 보호. 발견한 결함 상세는 판단이 애매하면 제외 |
 | 26 | 각 프로젝트 레포에 **`portfolio.md`** 를 두어 인계 | 프로젝트 레포에는 이 CLAUDE.md가 없으므로, 템플릿 파일 자체가 작성 규칙을 담도록 함. 구조가 스키마와 같아 옮길 때 기계적 변환만 필요 |
 | 27 | 개발 일지는 **막힌 순간에** 기록 | 사후에 몰아 쓰면 에러 메시지·시도 과정 등 세부사항이 사라짐. 그 세부사항이 일지의 가치 |
-| 28 | 그림자만 `@theme` 밖의 일반 CSS 변수(`--elev-*`)로 둔다 | Tailwind v4는 `shadow-*` 유틸에 `@theme` 값을 `var()`가 아니라 문자열로 인라인한다. `@theme`에 넣으면 `.dark`에서 그림자가 바뀌지 않는다. `shadow-(--elev-md)` 형태로 참조해야 런타임 교체가 동작 |
-| 29 | 이슈 타입 색상(Story/Task/Bug)은 자체 토큰으로 정의 | Nocturne 팔레트에 초록·빨강이 없다. Tailwind 기본 색상 직접 사용 금지([8. 코딩 컨벤션])를 지키려고 `--color-story/task/bug`의 200·800 단계 6개를 accent 램프와 같은 명도로 추가. 2026-09-16 디자인 승인 |
-| 30 | 섹션 높이는 `h-screen`이 아니라 `min-h-screen` | 내용이 많은 섹션(Experience)이 잘리는 대신 늘어나게 한다. 스냅은 `snap-start`라 섹션이 뷰포트보다 커도 시작점에 붙는다 (결정 18의 구현 세부) |
+| 28 | 상태 관리 경계: **페이지 이동해도 유지돼야 하면 전역** | 기준이 없으면 세션마다 판단이 달라짐. 애매하면 지역에서 시작 — 처음부터 전역에 두면 되돌리기 어려움 |
+| 29 | 컴포넌트는 데이터를 직접 import 하지 않고 **페이지가 props로 내림** | Firestore 이관(Phase 6) 시 페이지만 수정하면 되도록 |
+| 30 | 목업 HTML보다 **결정 기록이 우선** | 목업에는 확정된 결정과 충돌하는 부분이 있음(상단 헤더, 모달 등). 참고 자료이지 정답이 아님 |
+| 31 | 그림자만 `@theme` 밖의 일반 CSS 변수(`--elev-*`)로 둔다 | Tailwind v4는 `shadow-*` 유틸에 `@theme` 값을 `var()`가 아니라 문자열로 인라인한다. `@theme`에 넣으면 `.dark`에서 그림자가 바뀌지 않는다. `shadow-(--elev-md)` 형태로 참조해야 런타임 교체가 동작 |
+| 32 | 이슈 타입 색상(Story/Task/Bug)은 자체 토큰으로 정의 | Nocturne 팔레트에 초록·빨강이 없다. Tailwind 기본 색상 직접 사용 금지([8. 코딩 컨벤션])를 지키려고 `--color-story/task/bug`의 200·800 단계 6개를 accent 램프와 같은 명도로 추가. 2026-09-16 디자인 승인 |
+| 33 | 섹션 높이는 `h-screen`이 아니라 `min-h-screen` | 내용이 많은 섹션(Experience)이 잘리는 대신 늘어나게 한다. 스냅은 `snap-start`라 섹션이 뷰포트보다 커도 시작점에 붙는다 (결정 18의 구현 세부) |
+| 34 | 테마 상태는 `'dark' \| 'light'` 2값. `'system'`을 두지 않음 | 토글 버튼이 2상태인데 내부가 3상태면 "지금 뭘 누른 건가"가 모호해진다. 시스템 설정은 최초 진입 기본값을 정할 때만 참조 |
+| 35 | `.dark` 클래스는 `<body>`가 아닌 `<html>`에 | 스크롤바 색상과 `color-scheme`이 루트 기준으로 동작한다 |
+| 36 | 테스트 셀렉터를 **Phase 4에서 미리** 부여 | Phase 5에 몰아서 하면 이미 만든 컴포넌트를 전부 다시 열어야 한다. 만들 때 함께 넣으면 재작업이 없다 |
 
 ---
 
@@ -195,13 +224,23 @@ src/
 │   └── ProjectDetail.jsx    # 프로젝트 상세 (탭)
 ├── data/
 │   └── projects.js          # 프로젝트 데이터 (하드코딩)
+├── store/                   # Phase 4에서 생성
+│   ├── index.js             # configureStore
+│   └── themeSlice.js        # 다크/라이트 상태
 ├── App.jsx                  # 라우터 설정
 ├── App.css                  # @import "tailwindcss" + 디자인 토큰
-└── main.jsx
+└── main.jsx                 # Provider 래핑 + App.css import
 ```
 
-프로젝트 루트에 `docs/portfolio-template.md` — 새 프로젝트용 인계 문서 템플릿
-([10. 새 프로젝트 추가 절차] 참고)
+프로젝트 루트에 `docs/` — 참고 자료 ([11. 레퍼런스] 참고)
+```
+portfolio.md                 # 이 프로젝트의 기획·이슈·개발 일지
+docs/
+├── mockup.html              # Claude Design 목업 (참고용)
+└── nocturne/
+    ├── styles.css           # 다크 토큰 원본
+    └── styles-light.css     # 라이트 토큰 원본
+```
 
 ## 라우팅
 ```
@@ -219,6 +258,48 @@ src/
 - Experience - 경력 & 자격증
 - Projects - **대표 프로젝트 3개** + 전체 보기 링크
 - Skills - 기술 스택
+
+---
+
+## 데이터 흐름
+```
+src/data/projects.js
+    ↓ import
+pages/Home.jsx  →  featured: true 인 항목만 필터 → components/Projects.jsx
+pages/ProjectList.jsx  →  전체 + category 필터
+pages/ProjectDetail.jsx  →  useParams()의 id로 단건 조회
+```
+- 컴포넌트는 데이터를 **직접 import 하지 않는다.** 페이지가 import해서 props로 내린다
+  (Firestore 이관 시 페이지만 수정하면 되도록)
+- 예외: `SideNav`처럼 데이터가 아닌 상수는 컴포넌트 안에 두어도 된다
+
+## 상태 관리 경계
+
+**전역(Redux Toolkit)에 두는 것**
+- 여러 페이지에 걸쳐 유지돼야 하는 값
+- 현재: 테마(다크/라이트) 뿐
+- 예정: 관리자 로그인 상태 (Phase 6)
+
+**지역(`useState`)에 두는 것**
+- 한 컴포넌트 안에서만 쓰이고 언마운트되면 사라져도 되는 값
+- 탭 선택, 필터 선택, 모달 열림 여부, 스크롤 활성 섹션 등
+
+> **판단 기준: 페이지를 이동해도 유지돼야 하는가.**
+> 아니면 지역 상태다. 애매하면 지역에서 시작하고, 필요해지면 그때 올린다.
+> 처음부터 전역에 두면 되돌리기 어렵다.
+
+## 컴포넌트 분리 기준
+- 같은 UI가 **2곳 이상**에서 쓰이면 분리 (ArrowButton이 이 경우)
+- 한 파일이 **200줄**을 넘으면 분리를 검토
+- 단, 한 곳에서만 쓰이는 것을 미리 분리하지 않는다
+
+## 에러 / 예외 처리
+- **존재하지 않는 프로젝트 id** (`/projects/없는거`)
+  → "프로젝트를 찾을 수 없습니다" 안내 + 목록으로 돌아가는 링크. 빈 화면을 띄우지 않는다
+- **데이터 필드 누락** (`issues`가 없는 프로젝트 등)
+  → 해당 탭 자체를 렌더링하지 않는다. 빈 탭이나 "데이터 없음"을 표시하지 않는다
+- **Firestore 도입 후** (Phase 6~)
+  → 로딩 상태와 실패 상태를 명시적으로 표현한다. 무한 스피너를 만들지 않는다
 
 ---
 
@@ -416,14 +497,19 @@ neutral-900 #292b31   accent-900 #2b2741
 ```
 
 ### 그림자
-```
-다크    sm: 0 0 0 1px #3f424d
-        md: 0 0 0 1px #595d6c, 0 6px 18px rgba(0,0,0,.55)
-        lg: 0 0 0 1px #9397ab, 0 16px 40px rgba(0,0,0,.65)
+`@theme` 밖의 일반 CSS 변수로 정의하고 `shadow-(--elev-sm)` 형태로 참조한다 (결정 31).
 
-라이트  sm: 0 0 0 1px #cfd3e5
-        md: 0 0 0 1px #e4e7f5, 0 6px 18px rgba(30,32,48,.10)
-        lg: 0 0 0 1px #cfd3e5, 0 16px 40px rgba(30,32,48,.16)
+```css
+:root {
+  --elev-sm: 0 0 0 1px #cfd3e5;
+  --elev-md: 0 0 0 1px #e4e7f5, 0 6px 18px rgba(30,32,48,.10);
+  --elev-lg: 0 0 0 1px #cfd3e5, 0 16px 40px rgba(30,32,48,.16);
+}
+.dark {
+  --elev-sm: 0 0 0 1px #3f424d;
+  --elev-md: 0 0 0 1px #595d6c, 0 6px 18px rgba(0,0,0,.55);
+  --elev-lg: 0 0 0 1px #9397ab, 0 16px 40px rgba(0,0,0,.65);
+}
 ```
 
 ### 타이포그래피
@@ -460,7 +546,7 @@ background: linear-gradient(to right,
 
 ## 레이아웃 규칙
 - 최대 폭 `1180px`, 좌우 패딩 `clamp(20px, 5vw, 72px)`
-- 각 섹션은 `min-h-screen`(스크롤 스냅 유지 — [4. 결정 기록] 18·30번)
+- 각 섹션은 `min-h-screen`(스크롤 스냅 유지 — [4. 결정 기록] 18·33번)
 - 섹션 내부 정렬: 좌측 정렬 (중앙 정렬 아님)
 - 카드 그리드: `repeat(auto-fit, minmax(240~300px, 1fr))`, gap `16.8px`
 - 우측 고정 리모콘 Nav — 캡슐 컨테이너 + 원형 버튼
@@ -472,7 +558,7 @@ background: linear-gradient(to right,
 > 이 섹션에 항목을 추가하면 같은 기준으로 다시 확인할 것.
 >
 > 참고: **가로** 768px은 뜻이 다르다. Tailwind `md` 브레이크포인트이고
-> 이 미만에서 스크롤 스냅이 해제된다 ([11. 알려진 이슈] 5번). 같은 숫자지만 별개 기준이다.
+> 이 미만에서 스크롤 스냅이 해제된다 ([12. 알려진 이슈] 5번). 같은 숫자지만 별개 기준이다.
 
 ## 색상 적용 규칙 — 다크모드 구현 방식
 
@@ -501,7 +587,7 @@ CSS 변수를 `.dark` 클래스에서 교체하는 방식을 쓴다.
 
 **그림자만 예외다.** `@theme` 밖의 일반 변수로 두고 `shadow-(--elev-md)`로 참조한다.
 `@theme`에 넣으면 Tailwind가 값을 문자열로 인라인해서 `.dark` 교체가 통하지 않는다.
-([4. 결정 기록] 28번)
+([4. 결정 기록] 31번)
 
 ```jsx
 // 이렇게 쓴다 — 모드 전환은 변수가 처리
@@ -517,14 +603,139 @@ tag  라이트 → bg accent-200 / text accent-800
      다크   → bg accent-800 / text accent-100
 ```
 
+## 다크/라이트 토글 사양 (Phase 4)
+
+> ⚠️ **일부는 임재섭 확인 필요 — 아래 "확인 필요" 표시된 항목.**
+> 확인 전까지는 이 사양대로 구현하되, 다르면 알려줄 것.
+
+### 상태 위치
+- Redux Toolkit 슬라이스 `theme`에 둔다 (결정 12·17·28)
+- 값은 `'dark' | 'light'` 두 가지. `'system'`은 두지 않는다
+  → 토글 버튼이 2상태인데 내부가 3상태면 "지금 뭘 누른 건가"가 모호해진다
+
+### DOM 적용 지점
+- `<html>` 엘리먼트에 `class="dark"`를 붙이고 뗀다
+- `<body>`가 아니라 `<html>`인 이유: 스크롤바 색상과 `color-scheme`이 루트 기준으로 동작한다
+- React 밖의 DOM 조작이므로 `useEffect`에서 처리한다
+
+### 최초 진입 시 기본값
+1. `localStorage`에 저장된 값이 있으면 그것
+2. 없으면 `prefers-color-scheme` 시스템 설정
+3. 그래도 없으면 **다크**
+
+### FOUC 방지 — 빠뜨리기 쉬움
+React가 마운트되기 전에 라이트 화면이 한 번 번쩍인다.
+`index.html`의 `<head>`에 **인라인 스크립트**로 클래스를 미리 붙여야 한다.
+
+```html
+<script>
+  (function () {
+    var t = localStorage.getItem('theme')
+    if (!t) t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+    if (t === 'dark') document.documentElement.classList.add('dark')
+  })()
+</script>
+```
+
+> 이 스크립트와 Redux 초기값은 **같은 판정 로직**이어야 한다.
+> 어긋나면 첫 화면과 토글 상태가 불일치한다.
+
+### 토글 버튼 위치 — **확인 필요**
+- 제안: 우측 SideNav 리모콘 하단 (현재 장식용 원형이 있는 자리)
+- 근거: 상단 헤더가 없으므로([4] 19번) 전역 컨트롤을 둘 곳이 SideNav뿐이다
+- 상세 페이지에는 SideNav가 없다 → **그곳에서는 토글을 어디에 둘지 미정**
+
+### 접근성
+- 버튼에 `aria-label` 필수 (아이콘만 있으므로)
+- `<html>`에 `style="color-scheme: dark"`도 함께 갱신하면 폼 컨트롤·스크롤바가 따라온다
+
+### 파일 배치
+```
+src/store/
+├── index.js          # configureStore
+└── themeSlice.js     # theme 슬라이스
+```
+`main.jsx`에서 `<Provider store={store}>`로 감싼다.
+
+---
+
+## 네이밍
+
+| 대상 | 규칙 | 예시 |
+|---|---|---|
+| 컴포넌트 | PascalCase | `ArrowButton`, `ProjectDetail` |
+| 컴포넌트 파일 | 컴포넌트명과 동일 | `ArrowButton.jsx` |
+| 함수·변수 | camelCase | `scrollToSection`, `activeTab` |
+| 상수 배열 | camelCase, 파일 상단 | `const sections = [...]` |
+| 데이터 파일 | kebab-case 또는 단수형 | `projects.js` |
+| 프로젝트 `id` | kebab-case (URL에 노출) | `portfolio-website` |
+
+## 파일
+- 한 파일에 컴포넌트 하나. 단, 그 컴포넌트 안에서만 쓰이는 보조 컴포넌트는 같은 파일에 둬도 된다
+  (현재 해당 사례 없음 — `Projects.jsx`의 `Modal`은 결정 8에 따라 상세 페이지로 대체되며 삭제됨)
+- 컴포넌트는 `export default`로 내보낸다
+
+## import 순서
+```jsx
+// 1. 외부 라이브러리
+import { useState, useEffect } from 'react'
+import { useParams } from 'react-router-dom'
+
+// 2. 내부 컴포넌트
+import ArrowButton from '../components/ArrowButton'
+
+// 3. 데이터
+import { projects } from '../data/projects'
+
+// 4. 스타일
+import './App.css'
+```
+
+## 주석
+- 무엇을 하는지가 아니라 **왜 그렇게 했는지**를 쓴다
+- 자명한 코드에는 주석을 달지 않는다
+
 ## 컴포넌트 작성 규칙
 - 스타일은 Tailwind CSS 클래스만 사용 (인라인 스타일 금지)
 - 자주 쓰는 UI는 별도 컴포넌트로 분리 (ArrowButton 참고)
 - 다크모드는 `dark:` 접두사가 아닌 CSS 변수 교체로 처리 (위 [색상 적용 규칙] 참고)
-- 데이터는 컴포넌트에 하드코딩하지 말고 `src/data/`에서 import
+- 데이터는 컴포넌트에 하드코딩하지 않는다.
+  단 **컴포넌트가 직접 import 하지도 않는다** — 페이지가 import해서 props로 내린다 (결정 29)
 - 색상은 반드시 디자인 토큰 변수를 통해 사용한다 (`bg-surface`, `text-accent` 등)
   Tailwind 기본 색상(`gray-900`, `blue-600` 등)을 직접 쓰지 않는다
 
+## 테스트 셀렉터 전략 — **확인 필요**
+
+> **지금 정해야 하는 이유:** Phase 5에서 Playwright를 붙일 때 셀렉터가 없으면
+> 이미 만든 컴포넌트를 전부 다시 열어 속성을 추가해야 한다.
+> Phase 4를 진행하면서 함께 넣으면 그 재작업이 없다.
+
+### 제안하는 방식 — 역할 기반 우선, 구조에는 `data-testid`
+
+| 대상 | 셀렉터 | 이유 |
+|---|---|---|
+| 버튼·링크 등 인터랙티브 | `getByRole` + `aria-label` | 접근성 속성과 테스트 훅을 겸한다. 따로 관리할 게 늘지 않는다 |
+| 섹션·카드 등 구조 | `data-testid` | 한국어 문구는 자주 바뀐다. 텍스트 기반 셀렉터는 깨진다 |
+| 본문 내용 검증 | `getByText` | 내용 자체가 검증 대상일 때만 |
+
+### `data-testid` 명명 규칙
+```
+section-mypage        섹션
+project-card          반복되는 카드 (nth로 접근)
+tab-issues            탭
+theme-toggle          단일 컨트롤
+```
+- kebab-case, 영문
+- **컴포넌트명이 아니라 역할**로 짓는다 (`ProjectCard` → `project-card`)
+- 반복 요소는 인덱스를 붙이지 않는다. Playwright의 `.nth()`로 접근한다
+
+### 붙이는 위치
+- 각 섹션 최상위 엘리먼트
+- 프로젝트 카드 최상위
+- 탭 버튼, 필터 버튼, 테마 토글
+- **본문 텍스트 하나하나에는 붙이지 않는다.** 과하면 마크업이 지저분해진다
+
+---
 ## 커밋 메시지 컨벤션
 ```
 feat:     새 기능 추가
@@ -567,11 +778,32 @@ chore:    빌드, 설정 등 기타
 - 배포 후 실제 URL에서 동작 확인
 
 ## 6. 마무리
+
+### 완료 기준 (Definition of Done)
+아래를 모두 통과해야 "끝났다"고 보고한다.
+
+```bash
+npm run lint     # 통과
+npm run build    # 통과
+```
+
+- [ ] 린트·빌드 통과
+- [ ] 다크·라이트 **양쪽**에서 화면 확인 (한쪽만 보고 끝내지 않는다)
+- [ ] 세로 768px 화면에서 잘림 없음 ([8. 레이아웃 규칙])
+- [ ] 새로 만든 인터랙티브 요소에 `aria-label` / `data-testid` 부여
+- [ ] 변경한 파일 목록과 이유를 보고
+
+### 문서 갱신
 - 이슈 `status`를 `Done`으로 변경
 - 완료 조건 `done: true`로 갱신
 - 막혔던 부분 / 해결 과정을 `devLog`에 기록
 - **[3. 현재 상태] 갱신**
 - **새 결정이 있었다면 [4. 결정 기록]에 추가**
+
+> ⚠️ **`portfolio.md`와 `src/data/projects.js`는 같은 내용을 두 곳에 둔 상태다.**
+> 한쪽만 고치면 어긋난다.
+> **반드시 `portfolio.md` → `projects.js` 순서로 반영한다.**
+> (`portfolio.md`가 원본, `projects.js`는 화면에 뿌리기 위한 사본)
 
 ---
 
@@ -582,15 +814,24 @@ chore:    빌드, 설정 등 기타
 ## 원칙
 각 프로젝트 레포는 루트에 **`portfolio.md`** 를 둔다.
 이 파일이 프로젝트 쪽과 포트폴리오 사이트 사이의 **유일한 인계 문서**다.
-(템플릿: 이 레포의 `docs/portfolio-template.md`)
+
+템플릿은 별도 레포에 보관한다 → **`LimJaeSub/template`** (단수, **private**)
+- `CLAUDE-template.md` — 새 프로젝트용 작업 지시서 골격
+- `portfolio-template.md` — 포트폴리오 이관용 기록 양식
+
+> ⚠️ private 레포다. **인증 없이 조회하면 GitHub가 404를 반환한다** —
+> 존재 여부를 숨기기 위한 동작이라 "없는 레포"와 구분되지 않는다.
+> 접근이 안 되면 레포가 없는 것이 아니라 자격증명 문제일 수 있다.
 
 프로젝트 레포에는 이 CLAUDE.md가 없다.
 그래서 `portfolio.md` 템플릿 자체가 작성 규칙을 포함하도록 되어 있다.
 
 ## 프로젝트를 시작할 때 (다른 레포에서)
-1. `portfolio-template.md`를 복사해 새 레포 루트에 `portfolio.md`로 둔다
-2. 메타·기획 섹션을 먼저 채운다
-3. 작업하면서 이슈 상태와 개발 일지를 그때그때 갱신한다
+1. `template` 레포에서 두 템플릿을 가져온다
+2. `CLAUDE-template.md` → 새 레포 루트에 `CLAUDE.md`로 두고 프로젝트에 맞게 채운다
+3. `portfolio-template.md` → 새 레포 루트에 `portfolio.md`로 둔다
+4. 메타·기획 섹션을 먼저 채운다
+5. 작업하면서 이슈 상태와 개발 일지를 그때그때 갱신한다
 
 ## 사이트에 추가할 때 (이 레포에서)
 1. 해당 프로젝트의 `portfolio.md`를 가져온다
@@ -608,23 +849,61 @@ chore:    빌드, 설정 등 기타
 
 ---
 
-# 11. 환경 셋업 / 인수인계
+# 11. 레퍼런스
+
+> **Claude Code가 실제로 열어볼 수 있는 파일 경로를 적는다.**
+> 레포 밖에 있는 자료는 요약해서 이 문서 안에 옮긴다.
+
+## 레포 내 문서
+| 경로 | 내용 |
+|---|---|
+| `CLAUDE.md` | 이 문서. 프로젝트의 유일한 공유 기억 |
+| `portfolio.md` | 이 프로젝트의 기획·이슈·개발 일지 기록 |
+| `docs/nocturne/styles.css` | Nocturne 다크 토큰 원본 |
+| `docs/nocturne/styles-light.css` | Nocturne 라이트 토큰 원본 |
+| `docs/mockup.html` | Claude Design 생성 목업 (참고용) |
+
+## 다른 레포
+| 레포 | 내용 |
+|---|---|
+| `LimJaeSub/template` | 새 프로젝트용 CLAUDE.md · portfolio.md 템플릿 (private) |
+
+> ⚠️ **목업 HTML은 참고 자료이지 정답이 아니다.**
+> 목업에는 이 문서의 결정과 충돌하는 부분이 있다 (상단 헤더, 모달 방식 등).
+> 충돌 시 항상 [4. 결정 기록]이 우선한다.
+
+> ⚠️ Nocturne CSS를 그대로 import 하지 않는다.
+> 토큰값만 가져와 Tailwind `@theme`으로 정의한다 ([8. 코딩 컨벤션] 참고).
+
+## 디자인 시스템 출처
+- Claude Design에서 생성 (디자인 시스템명: Nocturne)
+- 핵심 토큰은 [8. 코딩 컨벤션]에 전사되어 있으므로, 원본 파일이 없어도 작업 가능
+
+## 외부 링크
+- GitHub: https://github.com/LimJaeSub/Portfolio-Website
+- 배포 URL: https://jasubwebsite.vercel.app
+- Tailwind v4 문서: https://tailwindcss.com/docs
+- React Router 문서: https://reactrouter.com
+
+---
+
+# 12. 환경 셋업 / 인수인계
 
 > 다른 PC나 환경에서 이어서 작업할 때 참고
 
 ## 인수인계 메모
 
-> 작성 2026-09-15 · 갱신 2026-09-16 — Phase 2 완료 시점
+> 갱신 2026-09-16 — Phase 3(배포) 완료 시점
 
 ### 지금 상태
-- `main` 브랜치. `origin/main`과 동기화됨
-- 린트·빌드 통과. 개발 서버 정상 동작
-- 배포 전이라 공개 URL 없음
+- `main` 브랜치, `origin/main`과 동기화
+- 린트·빌드 통과
+- Vercel 배포 완료 (URL은 [11. 레퍼런스] 참고)
 
 ### 넘겨받으면 먼저 할 것
 1. `npm install` — `react-router-dom`이 추가됐다
 2. `npm run dev` — **5173이 다른 프로젝트에 점유돼 있으면 Vite가 5174 등으로 자동 이동한다.** 터미널에 찍힌 주소를 확인할 것
-3. 이 문서의 [3. 현재 상태]와 [4. 결정 기록]을 읽을 것
+3. [3. 현재 상태]와 [4. 결정 기록]을 읽을 것
 
 ### 확인이 끝나지 않은 항목
 
@@ -637,11 +916,10 @@ chore:    빌드, 설정 등 기타
 - **git identity가 이 레포에만 설정돼 있다** (`재섭 <wotjw734843@gmail.com>`).
   전역 설정이 비어 있어 커밋이 막혔던 이력이 있다.
   새 환경에서 같은 증상이 나면 `git config user.email`부터 확인할 것
-- **Nocturne 원본 CSS는 레포에 없다.** 토큰은 `src/App.css`에 옮겨져 있어 보통은 필요 없지만,
-  컴포넌트 클래스(`.btn` `.card` `.seg` `.table` 등) 스펙이 필요하면
-  Claude Design 산출물(`styles.css` / `styles-light.css`)을 다시 받아야 한다
 - Wanted·CI/CD의 `period: '2026.01'`은 다른 레포에서 진행돼
   이 레포 이력으로는 확인할 수 없는 값이다. 임재섭이 직접 지정했다
+- `portfolio.md`와 `src/data/projects.js`는 **같은 내용을 두 곳에 둔 상태**다.
+  한쪽만 고치면 어긋난다. `portfolio.md`를 먼저 고치고 `projects.js`에 반영하는 순서를 지킬 것
 
 ## 필수 요구사항
 - Node.js LTS (기존 개발 환경 기준 v24.14.0)
@@ -738,15 +1016,48 @@ React Router 사용 시 `/projects/xxx`로 직접 접근하면 404가 발생한�
 
 ## 관련 링크
 - GitHub: https://github.com/LimJaeSub/Portfolio-Website
-- 배포 URL: (배포 후 추가 예정)
+- 배포 URL: https://jasubwebsite.vercel.app
 
 ---
 
-# 12. 로드맵 (Phase)
+# 13. 이 문서의 유지보수
+
+> **CLAUDE.md도 코드다.** 방치하면 썩고, 틀린 문서는 없는 문서보다 해롭다.
+
+## 갱신 시점
+| 언제 | 무엇을 |
+|---|---|
+| 작업 끝날 때마다 | [3. 현재 상태] |
+| 방향을 정했을 때 | [4. 결정 기록] — 이유까지 |
+| 새 패턴이 자리잡았을 때 | [8. 코딩 컨벤션] |
+| 막혔다 풀었을 때 | [12. 환경 셋업] 알려진 이슈 |
+
+## 정리 신호
+아래에 해당하면 문서를 손볼 때다.
+
+- **빈 섹션이 있다** → 삭제한다. 제목만 남은 섹션은 AI를 혼란스럽게 한다
+- **문서와 실제 코드가 다르다** → 문서를 고친다. 실제가 정답이다
+- **AI가 같은 실수를 반복한다** → 규칙이 없거나, 있어도 묻혀 있다
+- **길어서 안 읽힌다** → 별도 파일로 뺀다
+
+## 넣지 말아야 할 것
+- **AI가 읽어도 할 수 있는 게 없는 내용** — 개인 할 일, 학습 메모
+  → 별도 파일로 분리하고, 여기엔 "그 파일에 쓴다"는 규칙만 남긴다
+- **지금 쓰이지 않는 규칙** — 미리 정해둔 컨벤션은 대부분 죽은 규칙이 된다
+  → 실제 코드가 나온 뒤 그 패턴을 보고 적는다
+
+## 현재 알려진 부채
+- [8. 코딩 컨벤션]의 네이밍·import 규칙을 2026-09-16 리뉴얼 후 코드와 대조 완료.
+  2026-09-16 `docs/portfolio-template.md` 삭제 — `LimJaeSub/template` 레포의 사본과
+  내용이 동일해 중복이었다. 빈 양식의 정본은 그 레포다
+
+---
+
+# 14. 로드맵 (Phase)
 
 - **Phase 1** ✅ React 골격 완성 (섹션 4개 + SideNav)
 - **Phase 2** ✅ 디자인 리뉴얼 + React Router + 프로젝트 상세 페이지
-- **Phase 3** 🔲 Vercel 배포
+- **Phase 3** ✅ Vercel 배포
 - **Phase 4** 🔲 Redux Toolkit (다크모드 토글)
 - **Phase 5** 🔲 Playwright E2E 테스트 + 결과 JSON 저장
 - **Phase 6** 🔲 Firebase Auth (관리자 로그인) + Firestore 이관
