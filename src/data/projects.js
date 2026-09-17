@@ -99,7 +99,7 @@ export const projects = [
         { text: 'Nocturne 디자인 토큰으로 전체 스타일이 통일된다', done: true },
         { text: '프로젝트 카드 클릭 시 상세 페이지로 이동한다', done: true },
         { text: '산출물이 없는 프로젝트는 해당 탭이 노출되지 않는다', done: true },
-        { text: '다크/라이트 토글이 동작한다', done: false },
+        { text: '다크/라이트 토글이 동작한다', done: true },
         { text: 'Vercel에 배포되어 외부에서 접속된다', done: true },
         { text: 'Playwright E2E 테스트가 통과한다', done: false },
       ],
@@ -118,7 +118,7 @@ export const projects = [
       { id: 'PW-7', title: 'Nocturne 디자인 시스템으로 리뉴얼', type: 'Story', status: 'Done', sprint: 'Phase 2' },
       { id: 'PW-8', title: 'React Router 도입 및 프로젝트 상세 페이지 구현', type: 'Story', status: 'Done', sprint: 'Phase 2' },
       { id: 'PW-9', title: 'Vercel 배포', type: 'Task', status: 'Done', sprint: 'Phase 3' },
-      { id: 'PW-10', title: '다크/라이트 토글 (Redux Toolkit)', type: 'Story', status: 'To Do', sprint: 'Phase 4' },
+      { id: 'PW-10', title: '다크/라이트 토글 (Redux Toolkit)', type: 'Story', status: 'Done', sprint: 'Phase 4' },
       { id: 'PW-11', title: 'Playwright E2E 테스트 작성', type: 'Story', status: 'To Do', sprint: 'Phase 5' },
     ],
 
@@ -152,6 +152,12 @@ export const projects = [
         title: '회고와 개발 일지의 필드 모양이 달랐다',
         content:
           'retrospective를 devLog와 같은 모양(date/title/content)으로 가정하고 렌더링해두었는데, 스키마상 회고는 { topic, content }로 날짜가 없다. 당시 회고 데이터가 비어 있어 화면상 문제가 드러나지 않았고, 회고를 채우는 순간 날짜 칸이 비고 제목이 사라졌을 상황이었다. 렌더링을 분기해 해결. 데이터가 비어 있으면 잘못된 렌더링 코드도 멀쩡해 보인다는 걸 배웠다.',
+      },
+      {
+        date: '2026-09-17',
+        title: '전역 컨트롤을 화면 전용 위젯 안에 넣었다',
+        content:
+          '테마 토글을 SideNav 리모콘 하단에 넣었는데(결정 38), SideNav는 홈에만 렌더되기 때문에 목록·상세 페이지에서는 토글할 방법이 없었다. 테마는 전 페이지에 적용되는 전역 상태인데 컨트롤을 홈 전용 위젯 안에 넣은 것이 원인. SideNav를 전 페이지에 넣는 대안은 폐기했다 — 섹션 이동이 getElementById로 동작해서 섹션이 없는 화면에서는 버튼 4개가 조용히 아무 일도 하지 않고, 활성 표시도 mypage에 붙박이로 남는다. 토글을 분리해 App.jsx의 Routes 밖에 두고 우측 하단에 z-50으로 독립 고정했다(결정 41). 전역 컨트롤을 특정 화면 전용 위젯 안에 넣으면 그 위젯의 수명에 묶인다는 걸 배웠다.',
       },
     ],
   },

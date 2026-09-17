@@ -137,15 +137,12 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 - [x] 데이터를 `src/data/projects.js`로 이관
 - [x] **Vercel 배포** (Phase 3)
 - [x] TeamTodo 프로젝트 등록 (보류 상태) + `On Hold` 컬럼·상태 배지 추가
+- [x] **다크/라이트 토글** (Redux Toolkit, Phase 4)
 
 ## 진행 중 / 다음 작업
-- [ ] **다크/라이트 토글 (Redux Toolkit)** ← 현재 여기 (Phase 4)
-- [ ] Playwright E2E 테스트 (Phase 5)
+- [ ] **Playwright E2E 테스트** ← 현재 여기 (Phase 5)
 
 ## 미확정 사항
-
-> **임재섭 확인이 필요한 것** (Claude Code는 확인 전까지 문서의 제안대로 진행)
-- 상세 페이지의 테마 토글 위치 — 그 화면에는 SideNav가 없다 (결정 38)
 
 > **내용을 채워야 하는 것**
 - 기존 프로젝트 2개(Wanted, CI/CD)의 회고 내용 작성
@@ -202,9 +199,10 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 | 35 | `.dark` 클래스는 `<body>`가 아닌 `<html>`에 | 스크롤바 색상과 `color-scheme`이 루트 기준으로 동작한다 |
 | 36 | 테스트 셀렉터를 **Phase 4에서 미리** 부여 | Phase 5에 몰아서 하면 이미 만든 컴포넌트를 전부 다시 열어야 한다. 만들 때 함께 넣으면 재작업이 없다 |
 | 37 | 테스트 셀렉터는 `data-testid`가 아니라 **HTML `id`** | 섹션 4개가 이미 `id`를 갖고 있어(스크롤 이동용) 속성 체계를 하나로 통일. 단 `id`는 문서 내 유일해야 하므로 반복 요소는 데이터 키를 붙인다 (`project-card-<id>`) |
-| 38 | 테마 토글 버튼은 **우측 SideNav 하단** | 상단 헤더가 없어([4] 19번) 전역 컨트롤을 둘 곳이 SideNav뿐이다. 상세 페이지에는 SideNav가 없어 그곳 배치는 여전히 미정 |
+| 38 | ~~테마 토글 버튼은 **우측 SideNav 하단**~~ → **결정 41로 대체** | 상세 페이지를 고려하기 전에 내려진 결정이었다. "전역 컨트롤을 둘 곳이 SideNav뿐"이라는 근거가 정확하지 않았다 — 고정 위치를 새로 잡으면 된다 |
 | 39 | 칸반에 **`On Hold` 컬럼 추가** (3 → 4컬럼) | 판단해서 멈춘 것과 아직 손대지 않은 것은 다르다. `To Do`로 뭉개면 보류 결정 자체가 안 보인다 |
 | 40 | 링크가 없으면 **버튼을 숨긴다.** 대체 문구를 넣지 않음 | "비공개" 같은 문구는 이유를 반쪽만 전달한다. 사유는 `status` 배지와 `devLog`가 설명한다 |
+| 41 | 테마 토글은 SideNav에서 분리해 **우측 하단에 독립 고정** (`z-50`) | 테마는 전역인데 SideNav는 홈 전용이라, 그 안에 두면 목록·상세 페이지에서 토글할 수 없다. 페이지마다 위치가 달라지는 것도 피한다. SideNav를 전 페이지에 넣는 안은 폐기 — 섹션이 없는 화면에서는 버튼 4개가 전부 동작하지 않는다 |
 
 ---
 
@@ -222,16 +220,17 @@ src/
 │   ├── Section.jsx          # 메인 섹션 공통 골격 (라벨 + 제목 + 위아래 화살표)
 │   ├── ProjectCard.jsx      # 프로젝트 카드 (홈 · 목록 페이지 공용)
 │   ├── Tag.jsx              # 기술 스택 태그
-│   └── Divider.jsx          # 페이드 구분선 (Nocturne 시그니처)
+│   ├── Divider.jsx          # 페이드 구분선 (Nocturne 시그니처)
+│   └── ThemeToggle.jsx      # 테마 토글 (우측 하단 독립 고정)
 ├── pages/
 │   ├── Home.jsx             # 메인 (섹션 4개 스크롤)
 │   ├── ProjectList.jsx      # 전체 프로젝트 목록 + 카테고리 필터
 │   └── ProjectDetail.jsx    # 프로젝트 상세 (탭)
 ├── data/
 │   └── projects.js          # 프로젝트 데이터 (하드코딩)
-├── store/                   # Phase 4에서 생성
+├── store/
 │   ├── index.js             # configureStore
-│   └── themeSlice.js        # 다크/라이트 상태
+│   └── themeSlice.js        # 다크/라이트 상태 + 초기값 판정
 ├── App.jsx                  # 라우터 설정
 ├── App.css                  # @import "tailwindcss" + 디자인 토큰
 └── main.jsx                 # Provider 래핑 + App.css import
@@ -646,6 +645,8 @@ tag  라이트 → bg accent-200 / text accent-800
 - `<html>` 엘리먼트에 `class="dark"`를 붙이고 뗀다
 - `<body>`가 아니라 `<html>`인 이유: 스크롤바 색상과 `color-scheme`이 루트 기준으로 동작한다
 - React 밖의 DOM 조작이므로 `useEffect`에서 처리한다
+- **`App.jsx`에 둔다.** SideNav에 두면 상세·목록 페이지에서 테마가 적용되지 않는다
+- `localStorage` 저장도 이 effect에서 한다 (try/catch 필수)
 
 ### 최초 진입 시 기본값
 1. `localStorage`에 저장된 값이 있으면 그것
@@ -675,11 +676,13 @@ React가 마운트되기 전에 라이트 화면이 한 번 번쩍인다.
 > 이 스크립트와 Redux 초기값은 **같은 판정 로직**이어야 한다.
 > 어긋나면 첫 화면과 토글 상태가 불일치한다.
 
-### 토글 버튼 위치 — 확정 (결정 38)
-- 우측 SideNav 리모콘 하단 (현재 장식용 원형이 있는 자리)
-- 근거: 상단 헤더가 없으므로([4] 19번) 전역 컨트롤을 둘 곳이 SideNav뿐이다
-- `id="theme-toggle"`
-- 상세 페이지에는 SideNav가 없다 → **그곳 배치는 여전히 미정** ([3. 미확정 사항])
+### 토글 버튼 위치 — 확정 (결정 41)
+- **우측 하단에 독립 고정.** SideNav 안에 두지 않는다
+- `fixed right-[clamp(10px,2vw,24px)] bottom-[clamp(10px,2vw,24px)] z-50`
+- `id="theme-toggle"`, `aria-label`은 전환될 모드를 말한다 ("라이트 모드로 전환")
+- `App.jsx`의 `<Routes>` 밖에 렌더 — 모든 페이지에서 같은 자리에 있어야 한다
+- **`z-50`이 최상위다.** 이 위에 오는 레이어를 만들지 않는다 (SideNav는 `z-40`)
+- 아이콘은 **전환될 모드**를 가리킨다 (다크일 때 해 아이콘)
 
 ### 접근성
 - 버튼에 `aria-label` 필수 (아이콘만 있으므로)
@@ -983,7 +986,7 @@ npm run build    # 통과
 
 ## 인수인계 메모
 
-> 갱신 2026-09-17 — TeamTodo 등록 완료 시점 (Phase 4 착수 전)
+> 갱신 2026-09-17 — Phase 4(다크/라이트 토글) 완료 시점
 
 ### 지금 상태
 - `main` 브랜치, `origin/main`과 동기화
@@ -1000,7 +1003,6 @@ npm run build    # 통과
 | 항목 | 상태 |
 |---|---|
 | 회고(`retrospective`) 렌더링 | 코드는 작성됐으나 데이터가 비어 있어 **화면에 그려진 적 없음** |
-| 라이트 모드 전체 | 토큰은 정의됐으나 토글이 없어 `<html>`의 `class="dark"`를 지워야 확인 가능 |
 | 칸반 4컬럼 레이아웃 | `On Hold` 추가로 3 → 4열. 좁은 화면에서 접히는 모습 **미확인** |
 | `On Hold`·상태 배지 색상 | 대비 5.93:1로 AA는 통과. **디자인 확인 미완료** (결정 39) |
 
@@ -1150,7 +1152,7 @@ React Router 사용 시 `/projects/xxx`로 직접 접근하면 404가 발생한�
 - **Phase 1** ✅ React 골격 완성 (섹션 4개 + SideNav)
 - **Phase 2** ✅ 디자인 리뉴얼 + React Router + 프로젝트 상세 페이지
 - **Phase 3** ✅ Vercel 배포
-- **Phase 4** 🔲 Redux Toolkit (다크모드 토글)
+- **Phase 4** ✅ Redux Toolkit (다크모드 토글)
 - **Phase 5** 🔲 Playwright E2E 테스트 + 결과 JSON 저장
 - **Phase 6** 🔲 Firebase Auth (관리자 로그인) + Firestore 이관
 - **Phase 7** 🔲 관리자 페이지 — 사이트에서 직접 이슈/일지/완료조건 편집
