@@ -19,6 +19,7 @@ export const projects = [
     summary: 'Wanted 홈페이지 Selenium 자동화 테스트',
     category: 'automation',
     featured: true,
+    status: 'done',
     tags: ['Selenium', 'pytest', 'POM'],
     period: '2026.01',
     github: 'https://github.com/LimJaeSub/QA-Portfolio-Wanted',
@@ -41,7 +42,9 @@ export const projects = [
     title: 'CI/CD 파이프라인',
     summary: 'automationexercise.com 대상 CI/CD 구축',
     category: 'automation',
-    featured: true,
+    // 2026-09-17 대표작에서 내림 — TeamTodo를 올리기 위해 (3개 제한)
+    featured: false,
+    status: 'done',
     tags: ['Selenium', 'pytest', 'GitHub Actions', 'Allure'],
     period: '2026.01',
     github: 'https://github.com/LimJaeSub/qa-automation-pipeline',
@@ -64,6 +67,7 @@ export const projects = [
     summary: '기획 → 개발 → 테스트 → 배포 SDLC 연습',
     category: 'side',
     featured: true,
+    status: 'active',
     tags: ['React', 'Tailwind', 'Playwright', 'Jira'],
     period: '2026.03 ~ 진행 중',
     github: 'https://github.com/LimJaeSub/Portfolio-Website',
@@ -148,6 +152,79 @@ export const projects = [
         title: '회고와 개발 일지의 필드 모양이 달랐다',
         content:
           'retrospective를 devLog와 같은 모양(date/title/content)으로 가정하고 렌더링해두었는데, 스키마상 회고는 { topic, content }로 날짜가 없다. 당시 회고 데이터가 비어 있어 화면상 문제가 드러나지 않았고, 회고를 채우는 순간 날짜 칸이 비고 제목이 사라졌을 상황이었다. 렌더링을 분기해 해결. 데이터가 비어 있으면 잘못된 렌더링 코드도 멀쩡해 보인다는 걸 배웠다.',
+      },
+    ],
+  },
+  {
+    id: 'team-todo',
+    title: 'QA Part 팀 To-do 보드',
+    summary: '3인 팀이 로그인 없이 공유하는 주간 To-do 웹앱 (준실시간 동기화)',
+    category: 'side',
+    featured: true,
+    status: 'on-hold',
+    tags: ['Next.js', 'PostgreSQL', 'Docker', 'TypeScript', '자체호스팅'],
+    period: '2026.09 ~ (2026.09.17 보류)',
+    // 보류 사유는 개발 일지에 있다. 링크가 없으면 버튼을 그리지 않는다 (결정 40)
+    github: '',
+    demo: '',
+
+    overview: {
+      description:
+        '팀 관리자(head)가 주간 할 일을 배정하면, 나머지 팀원이 로그인 없이 이름만 선택해 실시간으로 확인·진행하는 웹 기반 To-do 앱. 사람별 리스트 뷰와 요일별 보드 뷰를 함께 제공한다.',
+      achievements: [],
+    },
+
+    design: {
+      purpose:
+        '3인 팀의 주간 업무 배정과 진행 상황 공유를 인증 절차 없이 가볍게 처리하기 위함',
+      elements: [
+        '이름 3개 중 클릭으로 사용자 식별 (로그인 없음)',
+        'head 전용 Todo 작성 화면',
+        '사람별 리스트 뷰 / 요일별 보드 뷰',
+        'Polling 기반 준실시간 반영 (수 초 간격 재조회)',
+        '(Phase 2) 주간 완료 항목 집계 및 요약 보고서',
+      ],
+      layout: '', // 원본이 '(진행하며 채움)' 상태 — 채워지면 기입
+      acceptanceCriteria: [
+        { text: 'head가 작성한 Todo가 팀원 화면에 새로고침 없이 반영된다', done: false },
+        { text: '이름 선택만으로 자신의 할 일을 구분해 볼 수 있다', done: false },
+        { text: '리스트 뷰와 보드 뷰를 전환할 수 있다', done: false },
+      ],
+    },
+
+    sprints: ['Sprint 1', 'Sprint 2'],
+
+    issues: [
+      { id: 'A-1', title: '프로젝트 초기 세팅 (Next.js)', type: 'Task', status: 'Done', sprint: 'Sprint 1' },
+      { id: 'A-2', title: '이름 선택 화면', type: 'Task', status: 'On Hold', sprint: 'Sprint 1' },
+      { id: 'A-3', title: 'Todo 테이블 스키마 설계', type: 'Task', status: 'On Hold', sprint: 'Sprint 1' },
+      { id: 'A-4', title: 'head 작성 화면', type: 'Story', status: 'On Hold', sprint: 'Sprint 1' },
+      { id: 'A-5', title: '팀원 조회/체크 화면 (리스트+보드)', type: 'Story', status: 'On Hold', sprint: 'Sprint 1' },
+      { id: 'A-6', title: 'Polling 기반 갱신 연결', type: 'Task', status: 'On Hold', sprint: 'Sprint 1' },
+      { id: 'A-7', title: '주간보고서 API', type: 'Story', status: 'To Do', sprint: 'Sprint 2' },
+      { id: 'A-8', title: 'Docker Postgres 컨테이너 구성', type: 'Task', status: 'On Hold', sprint: 'Sprint 1' },
+      { id: 'A-9', title: '배포 환경 구축 (pm2 상시 구동, 방화벽 포트 허용)', type: 'Task', status: 'On Hold', sprint: 'Sprint 1' },
+      { id: 'A-10', title: 'DB 백업 스크립트', type: 'Task', status: 'On Hold', sprint: 'Sprint 1' },
+    ],
+
+    devLog: [
+      {
+        date: '2026-09-17',
+        title: '기획 세션',
+        content:
+          '기획 세션에서 스택, 화면 구성(이름 선택 / 리스트 / 보드), 계정 분리 원칙을 결정했다.',
+      },
+      {
+        date: '2026-09-17',
+        title: '아키텍처 전환 (클라우드 → 자체 호스팅)',
+        content:
+          'Supabase 기준으로 초기 세팅을 마친 직후, Todo 본문에 실제 업무 내용이 들어간다는 점 때문에 클라우드 저장 자체를 재검토하게 됐다. 초기 스택 선정 시 "실시간 동기화"라는 기능 요구만 보고 데이터가 어디에 저장되는지를 제약 조건으로 넣지 않은 것이 원인. Postgres(Docker) 자체 호스팅으로 전환하고 realtime 구독은 polling으로 대체했다. 부수적으로, 새 기획 문서가 "서버 IP·사내 경로는 공개 불가"라고 규정하면서도 본문에 실제 값을 담고 있어 플레이스홀더로 치환했다. 업무 데이터를 클라우드에 넣는 것 자체가 민감한 사항이고, 업무와 조금이라도 관련되면 클라우드 사용을 먼저 고민해야 한다는 걸 배웠다.',
+      },
+      {
+        date: '2026-09-17',
+        title: 'Phase 1 보류 결정',
+        content:
+          '배포 검증 단계에서 서버 폴더가 네트워크 매핑 드라이브라는 것을 확인했다. 개발 PC에서 그 폴더를 열어 작업해도 Node·Docker·pm2는 전부 개발 PC에서 돌기 때문에 서버 구동 검증이 성립하지 않았다. "서버 폴더에 접근 가능하다"와 "서버에서 실행할 수 있다"를 같은 것으로 전제한 것이 원인 — 매핑 드라이브는 파일 시스템만 공유하고 실행 환경은 공유하지 않는다. 여기서 기술 문제가 아니라 권한 문제로 넘어갔고, PM 단독으로 결정할 수 없는 사안 4가지(사내 도구의 공개 범위, 공용 서버 점유와 방화벽, 설치 권한, 실업무 데이터의 보존·인계 책임)가 드러나 진행을 멈췄다. 레포 공개·서버 구동·데이터 축적처럼 되돌리기 어려운 상태가 먼저 만들어지는 것을 피하기 위함. 큰 환경에 들어가기 전에 작은 환경에서 목업으로 만들어 보고 환경 제약을 먼저 의논하는 편이 낫다는 걸 배웠다.',
       },
     ],
   },
