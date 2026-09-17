@@ -209,7 +209,7 @@ export const projects = [
 
     devLog: [
       {
-        date: '2026-09-17',
+        date: '2026-09-16',
         title: '기획 세션',
         content:
           '기획 세션에서 스택, 화면 구성(이름 선택 / 리스트 / 보드), 계정 분리 원칙을 결정했다.',
