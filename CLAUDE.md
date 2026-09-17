@@ -116,7 +116,7 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 > **매 세션 시작 시 여기를 먼저 확인. 작업 종료 시 갱신.**
 
 ## 최종 갱신
-2026-09-16
+2026-09-17
 
 ## 완료된 작업
 - [x] Vite + React 프로젝트 초기 셋업
@@ -136,6 +136,7 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 - [x] 프로젝트 상세 페이지 구현 (탭 4종, 데이터 없으면 미노출)
 - [x] 데이터를 `src/data/projects.js`로 이관
 - [x] **Vercel 배포** (Phase 3)
+- [x] TeamTodo 프로젝트 등록 (보류 상태) + `On Hold` 컬럼·상태 배지 추가
 
 ## 진행 중 / 다음 작업
 - [ ] **다크/라이트 토글 (Redux Toolkit)** ← 현재 여기 (Phase 4)
@@ -148,7 +149,8 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 
 > **내용을 채워야 하는 것**
 - 기존 프로젝트 2개(Wanted, CI/CD)의 회고 내용 작성
-- 대표 프로젝트 3개 선정
+- 대표 프로젝트 3개 선정 — 2026-09-17 확정: Wanted · 포트폴리오 사이트 · TeamTodo
+  (CI/CD 파이프라인을 내림. 3개 제한 유지)
 - 실무 프로젝트를 언제 추가할지
 
 > **정리해야 하는 것**
@@ -201,6 +203,8 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 | 36 | 테스트 셀렉터를 **Phase 4에서 미리** 부여 | Phase 5에 몰아서 하면 이미 만든 컴포넌트를 전부 다시 열어야 한다. 만들 때 함께 넣으면 재작업이 없다 |
 | 37 | 테스트 셀렉터는 `data-testid`가 아니라 **HTML `id`** | 섹션 4개가 이미 `id`를 갖고 있어(스크롤 이동용) 속성 체계를 하나로 통일. 단 `id`는 문서 내 유일해야 하므로 반복 요소는 데이터 키를 붙인다 (`project-card-<id>`) |
 | 38 | 테마 토글 버튼은 **우측 SideNav 하단** | 상단 헤더가 없어([4] 19번) 전역 컨트롤을 둘 곳이 SideNav뿐이다. 상세 페이지에는 SideNav가 없어 그곳 배치는 여전히 미정 |
+| 39 | 칸반에 **`On Hold` 컬럼 추가** (3 → 4컬럼) | 판단해서 멈춘 것과 아직 손대지 않은 것은 다르다. `To Do`로 뭉개면 보류 결정 자체가 안 보인다 |
+| 40 | 링크가 없으면 **버튼을 숨긴다.** 대체 문구를 넣지 않음 | "비공개" 같은 문구는 이유를 반쪽만 전달한다. 사유는 `status` 배지와 `devLog`가 설명한다 |
 
 ---
 
@@ -335,7 +339,9 @@ pages/ProjectDetail.jsx  →  useParams()의 id로 단건 조회
 - 완료 조건 (Acceptance Criteria) — 체크박스로 표시, 달성 여부 시각화
 
 ## 탭 3. 이슈 보드 (Issues) — Jira 역할
-- **칸반 보드 형태**: `To Do` / `In Progress` / `Done` 3개 컬럼
+- **칸반 보드 형태**: `To Do` / `In Progress` / `On Hold` / `Done` 4개 컬럼
+  - `On Hold`는 **판단해서 멈춘 것**이다. 아직 손대지 않은 `To Do`와 구분한다
+  - 보류 사유는 `devLog`에 남긴다. 컬럼만으로는 왜 멈췄는지 알 수 없다
 - 이슈 카드 표시 정보
   - 이슈 ID (예: JW-7)
   - 제목
@@ -353,9 +359,10 @@ Bug    → 빨강 계열
 
 ### 이슈 상태별 색상
 ```
-To Do        → 회색
-In Progress  → 파랑
-Done         → 초록
+To Do        → 회색 (neutral)
+In Progress  → 파랑 (accent)
+On Hold      → 앰버 계열 — 자체 토큰 (결정 32와 같은 방식)
+Done         → 초록 (story 토큰 재사용)
 ```
 
 ## 탭 4. 개발 일지 (Dev Log) / 회고 (Retrospective)
@@ -382,6 +389,7 @@ export const projects = [
     summary: '기획 → 개발 → 테스트 → 배포 SDLC 연습',
     category: 'side',                  // work | automation | side
     featured: true,                    // 홈 Projects 섹션 노출 여부
+    status: 'active',                  // active | done | on-hold (생략 시 배지 미노출)
     tags: ['React', 'Tailwind', 'Playwright'],
     period: '2026.03 ~ 진행 중',
     github: 'https://github.com/LimJaeSub/Portfolio-Website',
@@ -452,6 +460,26 @@ export const projects = [
 
 > 프로젝트가 늘어나도 홈 레이아웃은 고정된다.
 > 대표작 선정은 큐레이션이지 전시가 아니다.
+
+## 프로젝트 상태 배지
+
+`status` 필드가 있으면 카드와 상세 페이지 상단에 배지를 그린다.
+
+| 값 | 표시 | 색상 |
+|---|---|---|
+| `active` | 진행 중 | accent |
+| `done` | 완료 | story 토큰(초록) |
+| `on-hold` | 보류 | 앰버 — 이슈 `On Hold`와 같은 토큰 |
+
+필드가 없으면 배지를 그리지 않는다. 기존 프로젝트에 소급 적용하지 않는다.
+
+## 링크 버튼 처리
+
+`github` 또는 `demo`가 빈 문자열이면 **해당 버튼을 그리지 않는다.**
+"비공개", "준비 중" 같은 대체 문구를 넣지 않는다 — 없는 것은 없는 대로 둔다.
+
+> 링크가 없는 이유는 `status` 배지와 `devLog`가 설명한다.
+> 버튼 자리에 사유를 적으면 카드가 지저분해지고, 이유도 반쪽만 전달된다.
 
 ## 데이터 작성 규칙
 - 이슈는 실제로 진행한 작업만 기록한다 (임의 생성 금지)
@@ -864,11 +892,15 @@ npm run build    # 통과
 5. 작업하면서 이슈 상태와 개발 일지를 그때그때 갱신한다
 
 ## 사이트에 추가할 때 (이 레포에서)
-1. 해당 프로젝트의 `portfolio.md`를 가져온다
+1. 해당 프로젝트의 `portfolio.md`를 `docs/incoming/<id>.md`에 둔다
 2. [7. 데이터 스키마] 형식에 맞춰 `src/data/projects.js`에 항목 추가
 3. `featured` 여부 결정 — **대표작은 3개 제한.** 넣으려면 기존 하나를 내린다
 4. `category` 지정 (`work` / `automation` / `side`)
-5. 비어 있는 섹션은 해당 탭을 렌더링하지 않는다 ([6. 프로젝트 상세 페이지] 참고)
+5. `status` 지정 (`active` / `done` / `on-hold`) — 해당 없으면 생략
+6. 비어 있는 섹션은 해당 탭을 렌더링하지 않는다 ([6. 프로젝트 상세 페이지] 참고)
+7. **변환 확인 후 `docs/incoming/<id>.md`는 삭제한다**
+   → 영구 보관하면 프로젝트마다 이중 관리 지점이 하나씩 늘어난다.
+     원본은 그 프로젝트 레포에 남아 있다
 
 ## 변환 시 지켜야 할 것
 - **`portfolio.md`에 없는 내용을 채워 넣지 않는다.**
@@ -921,9 +953,37 @@ npm run build    # 통과
 
 > 다른 PC나 환경에서 이어서 작업할 때 참고
 
+## 환경 — 개인 PC (집)
+
+> 프리셋 출처: `LimJaeSub/template`의 `env-home.md`
+> ⚠️ 2026-09-17 확인 시점에 그 레포에는 `CLAUDE-template.md` · `portfolio-template.md` ·
+> `README.md`만 있다. `env-home.md`는 아직 없으므로 이 섹션이 사실상 원본이다.
+> 템플릿화할 때 이 내용을 그 레포로 올릴 것.
+
+- 위치: 개인 PC (집)
+- 네트워크: 일반 인터넷 연결
+- 저장소: GitHub **public** (`LimJaeSub/Portfolio-Website`)
+- 작업자: 임재섭 단독
+- 배포: Vercel
+
+### 이 환경에서 자유로운 것
+- 공개 레포에 push
+- npm 패키지 자유 설치
+- 클라우드 서비스 사용 (Vercel, 예정된 Firebase 등)
+- 외부 API 호출
+
+### 그래도 지킬 것
+- **회사에서 얻은 정보를 반입하지 않는다** — 고객사명, 제품명, 사내 경로, 서버 IP
+  → 실무(`work`) 프로젝트를 등록할 때 특히 주의 ([7. 데이터 작성 규칙])
+- 개인 연락처는 이메일까지만 (전화번호 노출 금지 — [4] 20번)
+- API 키·토큰은 `.env`에 두고 `.gitignore`에 포함
+  → `.gitignore` 69~71행에 `.env` / `.env.*` / `!.env.example`이 이미 있다 (2026-09-17 확인)
+  → Phase 6 Firebase 도입 시점에 실제로 필요해진다
+- 커밋 전 `git diff`로 민감 정보가 섞이지 않았는지 확인
+
 ## 인수인계 메모
 
-> 갱신 2026-09-16 — Phase 3(배포) 완료 시점
+> 갱신 2026-09-17 — TeamTodo 등록 완료 시점 (Phase 4 착수 전)
 
 ### 지금 상태
 - `main` 브랜치, `origin/main`과 동기화
@@ -941,6 +1001,8 @@ npm run build    # 통과
 |---|---|
 | 회고(`retrospective`) 렌더링 | 코드는 작성됐으나 데이터가 비어 있어 **화면에 그려진 적 없음** |
 | 라이트 모드 전체 | 토큰은 정의됐으나 토글이 없어 `<html>`의 `class="dark"`를 지워야 확인 가능 |
+| 칸반 4컬럼 레이아웃 | `On Hold` 추가로 3 → 4열. 좁은 화면에서 접히는 모습 **미확인** |
+| `On Hold`·상태 배지 색상 | 대비 5.93:1로 AA는 통과. **디자인 확인 미완료** (결정 39) |
 
 ### 알아둘 것
 - **git identity가 이 레포에만 설정돼 있다** (`재섭 <wotjw734843@gmail.com>`).
@@ -1094,6 +1156,11 @@ React Router 사용 시 `/projects/xxx`로 직접 접근하면 404가 발생한�
 - **Phase 7** 🔲 관리자 페이지 — 사이트에서 직접 이슈/일지/완료조건 편집
 - **Phase 8** 🔲 테스트 결과 대시보드 (Playwright 결과 표시)
 - **Phase 9** 🔲 Firebase REST API 자동화 테스트
+- **Phase 10** 🔲 `portfolio.md` 업로드 → 프로젝트 자동 등록
+  - 관리자 페이지에서 마크다운을 올리면 파싱해 Firestore에 저장
+  - 지금은 Claude Code가 수동 변환하는 단계를 대체
+  - Phase 7(관리자 페이지)과 Phase 6(Firestore)이 선행되어야 함
+  - 파싱 실패·필드 누락 시 어떻게 알릴지가 설계 포인트
 
 > Phase 6에서 `projects.js` 하드코딩 데이터를 Firestore로 이관한다.
 > [7. 데이터 스키마]는 그대로 컬렉션 구조로 옮기는 것을 전제로 설계되었다.
