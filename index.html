@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" class="dark">
+<html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -11,6 +11,26 @@
       rel="stylesheet"
     />
     <title>임재섭 · QA Automation Engineer</title>
+    <!--
+      FOUC 방지. React가 마운트되기 전에 테마 클래스를 미리 붙인다.
+      판정 로직은 src/store/themeSlice.js의 resolveInitialTheme()과 동일해야 한다.
+      localStorage 접근은 반드시 try/catch — 여기서 예외가 나면 이후 렌더가 통째로 멈춘다.
+    -->
+    <script>
+      ;(function () {
+        var t = null
+        try {
+          t = localStorage.getItem('theme')
+        } catch (e) {
+          /* 시크릿 모드·사이트 데이터 차단 */
+        }
+        if (t !== 'dark' && t !== 'light') {
+          t = window.matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark'
+        }
+        if (t === 'dark') document.documentElement.classList.add('dark')
+        document.documentElement.style.colorScheme = t
+      })()
+    </script>
   </head>
   <body>
     <div id="root"></div>
