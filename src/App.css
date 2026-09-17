@@ -43,6 +43,9 @@
   --color-task-800: #2c4570;
   --color-bug-200: #fadfdf;
   --color-bug-800: #6b3434;
+  /* On Hold — 판단해서 멈춘 상태 (결정 39). 앰버 계열, 위 3쌍과 같은 명도 단계 */
+  --color-hold-200: #f7e6c9;
+  --color-hold-800: #6b5324;
 
   --font-sans: "Inter", system-ui, sans-serif;
 

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useParams } from 'react-router-dom'
 import Tag from '../components/Tag'
 import Divider from '../components/Divider'
+import StatusBadge from '../components/StatusBadge'
 import { getProject } from '../data/projects'
 
 const ISSUE_TYPE_CLASS = {
@@ -10,11 +11,13 @@ const ISSUE_TYPE_CLASS = {
   Bug: 'bg-bug-200 text-bug-800 dark:bg-bug-800 dark:text-bug-200',
 }
 
-const COLUMNS = ['To Do', 'In Progress', 'Done']
+/* On Hold는 판단해서 멈춘 것. 아직 손대지 않은 To Do와 구분한다 (결정 39) */
+const COLUMNS = ['To Do', 'In Progress', 'On Hold', 'Done']
 
 const COLUMN_DOT = {
   'To Do': 'bg-neutral-500',
   'In Progress': 'bg-task-800 dark:bg-task-200',
+  'On Hold': 'bg-hold-800 dark:bg-hold-200',
   Done: 'bg-story-800 dark:bg-story-200',
 }
 
@@ -68,9 +71,12 @@ function ProjectDetail() {
       </Link>
 
       {/* 헤더 */}
-      <h1 className="mt-8 mb-2 text-[clamp(28px,4vw,38px)] leading-[1.12] font-medium tracking-[-0.02em]">
-        {project.title}
-      </h1>
+      <div className="mt-8 mb-2 flex flex-wrap items-center gap-4">
+        <h1 className="text-[clamp(28px,4vw,38px)] leading-[1.12] font-medium tracking-[-0.02em]">
+          {project.title}
+        </h1>
+        <StatusBadge status={project.status} />
+      </div>
       <p className="mb-4 text-[15px] text-text/60">{project.summary}</p>
       {project.period && <p className="mb-4 text-[12.5px] text-text/50">{project.period}</p>}
 
@@ -148,31 +154,38 @@ function ProjectDetail() {
       {/* 기획 · 설계 */}
       {activeTab === 'design' && (
         <section className="flex flex-col gap-8">
-          <div>
-            <h3 className="mb-4 text-[16px] font-medium">무엇을 왜 만드는가</h3>
-            <p className="max-w-[70ch] text-[14px] leading-[1.7] text-text/80">
-              {project.design.purpose}
-            </p>
-          </div>
+          {/* 아직 채우지 않은 항목은 제목만 남기지 않고 통째로 숨긴다 */}
+          {project.design.purpose && (
+            <div>
+              <h3 className="mb-4 text-[16px] font-medium">무엇을 왜 만드는가</h3>
+              <p className="max-w-[70ch] text-[14px] leading-[1.7] text-text/80">
+                {project.design.purpose}
+              </p>
+            </div>
+          )}
 
-          <div>
-            <h3 className="mb-4 text-[16px] font-medium">포함 요소</h3>
-            <ul className="flex flex-col gap-3">
-              {project.design.elements.map((item) => (
-                <li key={item} className="flex gap-4 text-[13.5px] leading-[1.6] text-text/80">
-                  <span className="mt-[11px] h-px w-[14px] flex-none bg-accent" />
-                  {item}
-                </li>
-              ))}
-            </ul>
-          </div>
+          {project.design.elements.length > 0 && (
+            <div>
+              <h3 className="mb-4 text-[16px] font-medium">포함 요소</h3>
+              <ul className="flex flex-col gap-3">
+                {project.design.elements.map((item) => (
+                  <li key={item} className="flex gap-4 text-[13.5px] leading-[1.6] text-text/80">
+                    <span className="mt-[11px] h-px w-[14px] flex-none bg-accent" />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-          <div>
-            <h3 className="mb-4 text-[16px] font-medium">레이아웃 &amp; UI</h3>
-            <p className="max-w-[70ch] text-[14px] leading-[1.7] text-text/80">
-              {project.design.layout}
-            </p>
-          </div>
+          {project.design.layout && (
+            <div>
+              <h3 className="mb-4 text-[16px] font-medium">레이아웃 &amp; UI</h3>
+              <p className="max-w-[70ch] text-[14px] leading-[1.7] text-text/80">
+                {project.design.layout}
+              </p>
+            </div>
+          )}
 
           <div>
             <h3 className="mb-4 text-[16px] font-medium">완료 조건</h3>
