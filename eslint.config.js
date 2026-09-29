@@ -26,4 +26,11 @@ export default defineConfig([
       'no-unused-vars': ['error', { varsIgnorePattern: '^[A-Z_]' }],
     },
   },
+  {
+    // Playwright 설정·테스트는 브라우저가 아니라 Node에서 실행된다 (process 등)
+    files: ['playwright.config.js', 'tests/**/*.js'],
+    languageOptions: {
+      globals: globals.node,
+    },
+  },
 ])
