@@ -90,7 +90,7 @@ QA 엔지니어로서의 경력과 프로젝트를 소개하되, 결과물만 �
 | PW-8 | React Router 도입 및 프로젝트 상세 페이지 구현 | Story | Done | Phase 2 |
 | PW-9 | Vercel 배포 | Task | Done | Phase 3 |
 | PW-10 | 다크/라이트 토글 (Redux Toolkit) | Story | Done | Phase 4 |
-| PW-11 | Playwright E2E 테스트 작성 | Story | To Do | Phase 5 |
+| PW-11 | Playwright E2E 테스트 작성 | Story | In Progress | Phase 5 |
 
 ---
 

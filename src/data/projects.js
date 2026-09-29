@@ -119,7 +119,7 @@ export const projects = [
       { id: 'PW-8', title: 'React Router 도입 및 프로젝트 상세 페이지 구현', type: 'Story', status: 'Done', sprint: 'Phase 2' },
       { id: 'PW-9', title: 'Vercel 배포', type: 'Task', status: 'Done', sprint: 'Phase 3' },
       { id: 'PW-10', title: '다크/라이트 토글 (Redux Toolkit)', type: 'Story', status: 'Done', sprint: 'Phase 4' },
-      { id: 'PW-11', title: 'Playwright E2E 테스트 작성', type: 'Story', status: 'To Do', sprint: 'Phase 5' },
+      { id: 'PW-11', title: 'Playwright E2E 테스트 작성', type: 'Story', status: 'In Progress', sprint: 'Phase 5' },
     ],
 
     devLog: [

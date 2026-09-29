@@ -116,7 +116,7 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 > **매 세션 시작 시 여기를 먼저 확인. 작업 종료 시 갱신.**
 
 ## 최종 갱신
-2026-09-17
+2026-09-29
 
 ## 완료된 작업
 - [x] Vite + React 프로젝트 초기 셋업
@@ -140,7 +140,11 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 - [x] **다크/라이트 토글** (Redux Toolkit, Phase 4)
 
 ## 진행 중 / 다음 작업
-- [ ] **Playwright E2E 테스트** ← 현재 여기 (Phase 5)
+- [x] Playwright 설치 + E2E 테스트 작성 (Phase 5 · 1~3단계)
+- [ ] **CI + 최신 결과 사이트 표시** ← 현재 여기 (Phase 5 · 4~6단계)
+  - GitHub Actions 워크플로
+  - JSON 리포터 → `public/test-results.json`
+  - 사이트에서 fetch해 표시
 
 ## 미확정 사항
 
@@ -242,6 +246,15 @@ src/
 ├── App.jsx                  # 라우터 설정
 ├── App.css                  # @import "tailwindcss" + 디자인 토큰
 └── main.jsx                 # Provider 래핑 + App.css import
+```
+
+```
+tests/                       # Playwright E2E (Phase 5)
+├── routing.spec.js          # 라우팅 · 직접 접근 · 없는 id
+├── home.spec.js             # 섹션 · SideNav · 스크롤 스냅
+├── projects.spec.js         # 데이터 주도 순회 · 탭 · 필터
+└── theme.spec.js            # 초기값 판정 · 토글 · 유지
+playwright.config.js         # chromium, 프로덕션 빌드 대상(4173)
 ```
 
 프로젝트 루트에 `docs/` — 참고 자료 ([11. 레퍼런스] 참고)
@@ -1123,17 +1136,29 @@ npm run build    # 통과
 
 ## 인수인계 메모
 
-> 갱신 2026-09-17 — Phase 4(다크/라이트 토글) 완료 시점
+> 갱신 2026-09-29 — Phase 5 진행 중 (테스트 작성까지 완료, CI·결과 표시 남음)
 
 ### 지금 상태
 - `main` 브랜치, `origin/main`과 동기화
-- 린트·빌드 통과
+- 린트·빌드 통과. Playwright 39개 통과
 - Vercel 배포 완료 (URL은 [11. 레퍼런스] 참고)
+- **PW-11은 `In Progress`다.** 완료 조건 "Playwright E2E 테스트가 통과한다"는
+  CI에서 돌고 결과가 사이트에 뜨는 것까지를 뜻하므로 아직 `Done`이 아니다
 
 ### 넘겨받으면 먼저 할 것
-1. `npm install` — `react-router-dom`이 추가됐다
-2. `npm run dev` — **5173이 다른 프로젝트에 점유돼 있으면 Vite가 5174 등으로 자동 이동한다.** 터미널에 찍힌 주소를 확인할 것
-3. [3. 현재 상태]와 [4. 결정 기록]을 읽을 것
+
+> 2026-09-29 노트북 → 데스크톱 PC로 작업 환경을 옮겼다.
+> 아래 2번을 빼먹으면 테스트가 브라우저를 못 찾는다.
+
+1. `npm install`
+2. **`npx playwright install chromium`** — 필수.
+   브라우저 바이너리는 레포에도 `node_modules`에도 없다.
+   OS 사용자 폴더(`~/AppData/Local/ms-playwright`)에 따로 깔린다.
+   **새 PC에서는 반드시 다시 받아야 한다**
+3. `npm test` — 프로덕션 빌드 후 4173 포트에서 검증한다.
+   개발 서버를 따로 띄울 필요 없다 (`playwright.config.js`의 `webServer`가 처리)
+4. `npm run dev` — **5173이 다른 프로젝트에 점유돼 있으면 Vite가 5174 등으로 자동 이동한다.** 터미널에 찍힌 주소를 확인할 것
+5. [3. 현재 상태]와 [4. 결정 기록]을 읽을 것
 
 ### 확인이 끝나지 않은 항목
 
@@ -1151,6 +1176,11 @@ npm run build    # 통과
   이 레포 이력으로는 확인할 수 없는 값이다. 임재섭이 직접 지정했다
 - `portfolio.md`와 `src/data/projects.js`는 **같은 내용을 두 곳에 둔 상태**다.
   한쪽만 고치면 어긋난다. `portfolio.md`를 먼저 고치고 `projects.js`에 반영하는 순서를 지킬 것
+- 테스트는 **데이터 주도**라 `projects.js`에 프로젝트를 추가하면 테스트가 자동으로 늘어난다.
+  테스트 파일을 고칠 일이 없다 (결정 42)
+- **"전부 통과"를 그대로 믿지 말 것.** 2026-09-29에 셀렉터와 탭 조건을 일부러 깨뜨려
+  7개가 실패하는 것을 확인했다. 새 테스트를 추가할 때도 같은 확인을 한 번 거칠 것 (결정 45)
+- 테스트가 쓰는 `id`는 화면 기능도 겸한다. `id`를 바꾸면 `tests/`도 같이 고쳐야 한다
 
 ## 필수 요구사항
 - Node.js LTS (기존 개발 환경 기준 v24.14.0)
