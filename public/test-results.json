@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-09-30T09:32:02.669Z",
-  "source": "local",
-  "commit": "",
-  "runUrl": "",
+  "generatedAt": "2026-09-30T09:33:48.984Z",
+  "source": "ci",
+  "commit": "412f54f",
+  "runUrl": "https://github.com/LimJaeSub/Portfolio-Website/actions/runs/36696800804",
   "browser": "chromium",
   "total": 47,
   "passed": 46,
   "failed": 1,
   "flaky": 0,
   "skipped": 0,
-  "durationMs": 24927,
+  "durationMs": 21042,
   "files": [
     {
       "file": "_ci-check.spec.js",
