@@ -12,7 +12,14 @@ export default defineConfig({
   fullyParallel: true,
   forbidOnly: !!process.env.CI,
   retries: process.env.CI ? 2 : 0,
-  reporter: 'list',
+  /*
+   * CI에서는 JSON도 함께 뽑는다. 이 원본을 scripts/summarize-tests.js가
+   * public/test-results.json으로 줄여서 사이트가 읽는다.
+   * 원본은 러너의 절대 경로·스택이 들어 있어 그대로 공개하지 않는다.
+   */
+  reporter: process.env.CI
+    ? [['list'], ['json', { outputFile: 'playwright-report.json' }]]
+    : 'list',
 
   use: {
     baseURL: 'http://localhost:4173',

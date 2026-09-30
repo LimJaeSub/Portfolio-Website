@@ -3,6 +3,7 @@ import { Link, useParams } from 'react-router-dom'
 import Tag from '../components/Tag'
 import Divider from '../components/Divider'
 import StatusBadge from '../components/StatusBadge'
+import TestResults from '../components/TestResults'
 import { getProject } from '../data/projects'
 
 const ISSUE_TYPE_CLASS = {
@@ -147,6 +148,13 @@ function ProjectDetail() {
                 ))}
               </ul>
             </>
+          )}
+
+          {/* testResults 필드가 있는 프로젝트만 그린다 */}
+          {project.testResults && (
+            <div className="mt-8">
+              <TestResults src={project.testResults} />
+            </div>
           )}
         </section>
       )}

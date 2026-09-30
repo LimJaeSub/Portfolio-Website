@@ -116,7 +116,7 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 > **매 세션 시작 시 여기를 먼저 확인. 작업 종료 시 갱신.**
 
 ## 최종 갱신
-2026-09-29
+2026-09-30
 
 ## 완료된 작업
 - [x] Vite + React 프로젝트 초기 셋업
@@ -141,10 +141,11 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 
 ## 진행 중 / 다음 작업
 - [x] Playwright 설치 + E2E 테스트 작성 (Phase 5 · 1~3단계)
-- [ ] **CI + 최신 결과 사이트 표시** ← 현재 여기 (Phase 5 · 4~6단계)
-  - GitHub Actions 워크플로
-  - JSON 리포터 → `public/test-results.json`
-  - 사이트에서 fetch해 표시
+- [x] GitHub Actions + 결과 요약 + 사이트 표시 (Phase 5 · 4~6단계)
+- [ ] **CI 첫 실행 확인** ← 현재 여기
+  - 워크플로가 실제로 돌고 `public/test-results.json`이 갱신되는지
+  - 되커밋이 워크플로를 다시 부르지 않는지 (`paths-ignore` · `[skip ci]`)
+  - 확인되면 PW-11을 Done으로
 
 ## 미확정 사항
 
@@ -215,6 +216,9 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 | 45 | AI 테스트 생성은 **사람 승인 후 저장** | AI가 만든 잘못된 셀렉터는 '항상 통과하는 테스트'가 된다. 없느니만 못하다. AI를 쓰되 검증 책임은 넘기지 않는다 |
 | 46 | API 키·토큰은 **Cloud Function에만** 둔다 | React 번들은 공개된다. 관리자 로그인 뒤에 숨겨도 개발자 도구로 보인다 |
 | 47 | 관리자 기능은 **공개 결과물 + 스크린샷 + 데모 계정** 3층으로 노출 | 관리자 페이지는 방문자가 못 본다. 그중 공개 결과물(커밋 이력, 대시보드)이 가장 강하다 — 스크린샷은 만들 수 있지만 커밋 기록은 만들 수 없다 |
+| 48 | 테스트 결과 노출은 `testResults` **데이터 필드로 제어** | 컴포넌트에 `id === 'portfolio-website'`를 박으면 프로젝트가 늘 때마다 컴포넌트를 고쳐야 한다. 필드가 있는 프로젝트만 그리면 데이터만 만지면 된다 (결정 29와 같은 방향) |
+| 49 | CI가 결과를 **레포에 되커밋**한다 | 백엔드 없이 최신 결과를 보여주는 가장 싼 방법. 단 그 커밋이 워크플로를 다시 부르지 않도록 `paths-ignore` · `concurrency` · `[skip ci]` 3중으로 막는다 |
+| 50 | 실패해도 결과를 갱신한다 (`if: always()`) | 통과했을 때만 갱신하면 사이트가 마지막 성공을 계속 보여준다. 깨진 상태를 감추는 대시보드는 없느니만 못하다 |
 
 ---
 
@@ -233,7 +237,8 @@ src/
 │   ├── ProjectCard.jsx      # 프로젝트 카드 (홈 · 목록 페이지 공용)
 │   ├── Tag.jsx              # 기술 스택 태그
 │   ├── Divider.jsx          # 페이드 구분선 (Nocturne 시그니처)
-│   └── ThemeToggle.jsx      # 테마 토글 (우측 하단 독립 고정)
+│   ├── ThemeToggle.jsx      # 테마 토글 (우측 하단 독립 고정)
+│   └── TestResults.jsx      # 최신 E2E 결과 카드 (개요 탭)
 ├── pages/
 │   ├── Home.jsx             # 메인 (섹션 4개 스크롤)
 │   ├── ProjectList.jsx      # 전체 프로젝트 목록 + 카테고리 필터
@@ -253,8 +258,14 @@ tests/                       # Playwright E2E (Phase 5)
 ├── routing.spec.js          # 라우팅 · 직접 접근 · 없는 id
 ├── home.spec.js             # 섹션 · SideNav · 스크롤 스냅
 ├── projects.spec.js         # 데이터 주도 순회 · 탭 · 필터
-└── theme.spec.js            # 초기값 판정 · 토글 · 유지
+├── theme.spec.js            # 초기값 판정 · 토글 · 유지
+└── test-results.spec.js     # 결과 카드 (실패·에러 경로는 응답 가로채기)
+scripts/
+└── summarize-tests.js       # Playwright JSON 원본 → public/test-results.json
+.github/workflows/
+└── e2e.yml                  # push 시 테스트 → 결과 요약 → 레포에 되커밋
 playwright.config.js         # chromium, 프로덕션 빌드 대상(4173)
+public/test-results.json     # CI가 갱신. 사이트가 fetch해서 읽는다
 ```
 
 프로젝트 루트에 `docs/` — 참고 자료 ([11. 레퍼런스] 참고)
@@ -414,6 +425,7 @@ export const projects = [
     period: '2026.03 ~ 진행 중',
     github: 'https://github.com/LimJaeSub/Portfolio-Website',
     demo: '',                          // 배포 URL
+    testResults: '',                   // 최신 E2E 결과 JSON 경로 (없으면 미노출)
 
     overview: {
       description: '...',
@@ -866,9 +878,14 @@ GitHub Actions에서 테스트 실행
 ```
 
 - 백엔드·DB 없이 동작한다. Firebase 도입 전에 보여줄 것이 생긴다
-- `public/`에 두면 Vercel 재빌드 없이 읽힌다
+- `public/`에 두면 빌드 시 `dist/`로 복사돼 그대로 서빙된다
+  (결과 커밋도 push이므로 Vercel은 어차피 재빌드한다 — 설정을 건드릴 필요가 없다는 뜻)
 - 최신 1회만 표시한다. **이력은 Phase 8** (Firestore 필요)
 - 하드코딩한 가짜 결과를 넣지 않는다. 실제 실행 결과만 표시한다
+- **JSON 리포터 원본을 그대로 공개하지 않는다.** 러너의 절대 경로·에러 스택이 들어 있고
+  46개 기준 50KB다. `scripts/summarize-tests.js`가 700바이트 요약으로 줄인다
+- 요약에 `source: 'local' | 'ci'`를 넣는다 — 로컬 실행이 CI 결과처럼 보이면 안 된다
+- **실패해도 갱신한다** (결정 50). 통과했을 때만 갱신하면 마지막 성공이 계속 남는다
 
 ---
 
@@ -1136,11 +1153,12 @@ npm run build    # 통과
 
 ## 인수인계 메모
 
-> 갱신 2026-09-29 — Phase 5 진행 중 (테스트 작성까지 완료, CI·결과 표시 남음)
+> 갱신 2026-09-30 — Phase 5 구현 완료, CI 첫 실행 확인 대기
 
 ### 지금 상태
 - `main` 브랜치, `origin/main`과 동기화
-- 린트·빌드 통과. Playwright 39개 통과
+- 린트·빌드 통과. Playwright 46개 통과 (로컬)
+- **CI는 아직 한 번도 돌지 않았다.** 워크플로를 처음 push하는 시점이다
 - Vercel 배포 완료 (URL은 [11. 레퍼런스] 참고)
 - **PW-11은 `In Progress`다.** 완료 조건 "Playwright E2E 테스트가 통과한다"는
   CI에서 돌고 결과가 사이트에 뜨는 것까지를 뜻하므로 아직 `Done`이 아니다
@@ -1165,6 +1183,8 @@ npm run build    # 통과
 | 항목 | 상태 |
 |---|---|
 | 회고(`retrospective`) 렌더링 | 코드는 작성됐으나 데이터가 비어 있어 **화면에 그려진 적 없음** |
+| GitHub Actions 워크플로 | 로컬에서 YAML 파싱만 확인. **실제로 돌아간 적 없음** |
+| CI 되커밋 루프 차단 | `paths-ignore`·`concurrency`·`[skip ci]` 3중. **실제 검증 전** |
 | 칸반 4컬럼 레이아웃 | `On Hold` 추가로 3 → 4열. 좁은 화면에서 접히는 모습 **미확인** |
 | `On Hold`·상태 배지 색상 | 대비 5.93:1로 AA는 통과. **디자인 확인 미완료** (결정 39) |
 
@@ -1181,6 +1201,9 @@ npm run build    # 통과
 - **"전부 통과"를 그대로 믿지 말 것.** 2026-09-29에 셀렉터와 탭 조건을 일부러 깨뜨려
   7개가 실패하는 것을 확인했다. 새 테스트를 추가할 때도 같은 확인을 한 번 거칠 것 (결정 45)
 - 테스트가 쓰는 `id`는 화면 기능도 겸한다. `id`를 바꾸면 `tests/`도 같이 고쳐야 한다
+- **전부 통과하는 데이터로는 실패 표시 경로를 검증할 수 없다.**
+  `test-results.spec.js`는 응답을 가로채(`page.route`) 실패·에러 화면을 따로 확인한다.
+  2026-09-30에 이 경로가 없을 때 변이가 안 잡히는 것을 확인하고 추가했다
 
 ## 필수 요구사항
 - Node.js LTS (기존 개발 환경 기준 v24.14.0)

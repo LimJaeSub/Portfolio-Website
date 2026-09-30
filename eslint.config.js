@@ -28,7 +28,7 @@ export default defineConfig([
   },
   {
     // Playwright 설정·테스트는 브라우저가 아니라 Node에서 실행된다 (process 등)
-    files: ['playwright.config.js', 'tests/**/*.js'],
+    files: ['playwright.config.js', 'tests/**/*.js', 'scripts/**/*.js'],
     languageOptions: {
       globals: globals.node,
     },

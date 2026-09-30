@@ -20,6 +20,7 @@ category: side
 period:   2026.03 ~ 진행 중
 github:   https://github.com/LimJaeSub/Portfolio-Website
 demo:     https://jasubwebsite.vercel.app
+testResults: /test-results.json   # CI가 갱신하는 최신 E2E 결과
 tags:     [React, Tailwind, Playwright, Jira]
 ```
 

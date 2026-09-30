@@ -1,0 +1,50 @@
+{
+  "generatedAt": "2026-09-30T08:34:26.218Z",
+  "source": "local",
+  "commit": "",
+  "runUrl": "",
+  "browser": "chromium",
+  "total": 46,
+  "passed": 46,
+  "failed": 0,
+  "flaky": 0,
+  "skipped": 0,
+  "durationMs": 15455,
+  "files": [
+    {
+      "file": "home.spec.js",
+      "passed": 6,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    {
+      "file": "projects.spec.js",
+      "passed": 21,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    {
+      "file": "routing.spec.js",
+      "passed": 5,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    {
+      "file": "test-results.spec.js",
+      "passed": 7,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 0
+    },
+    {
+      "file": "theme.spec.js",
+      "passed": 7,
+      "failed": 0,
+      "flaky": 0,
+      "skipped": 0
+    }
+  ]
+}

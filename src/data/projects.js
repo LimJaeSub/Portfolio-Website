@@ -72,6 +72,8 @@ export const projects = [
     period: '2026.03 ~ 진행 중',
     github: 'https://github.com/LimJaeSub/Portfolio-Website',
     demo: 'https://jasubwebsite.vercel.app',
+    // CI가 갱신하는 최신 E2E 결과. 이 필드가 있는 프로젝트만 개요 탭에 결과를 그린다
+    testResults: '/test-results.json',
 
     overview: {
       description:
