@@ -1,16 +1,23 @@
 {
-  "generatedAt": "2026-09-30T08:34:26.218Z",
+  "generatedAt": "2026-09-30T09:32:02.669Z",
   "source": "local",
   "commit": "",
   "runUrl": "",
   "browser": "chromium",
-  "total": 46,
+  "total": 47,
   "passed": 46,
-  "failed": 0,
+  "failed": 1,
   "flaky": 0,
   "skipped": 0,
-  "durationMs": 15455,
+  "durationMs": 24927,
   "files": [
+    {
+      "file": "_ci-check.spec.js",
+      "passed": 0,
+      "failed": 1,
+      "flaky": 0,
+      "skipped": 0
+    },
     {
       "file": "home.spec.js",
       "passed": 6,
