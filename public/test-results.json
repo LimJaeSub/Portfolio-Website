@@ -1,23 +1,16 @@
 {
-  "generatedAt": "2026-09-30T09:33:48.984Z",
+  "generatedAt": "2026-10-08T06:39:15.746Z",
   "source": "ci",
-  "commit": "412f54f",
-  "runUrl": "https://github.com/LimJaeSub/Portfolio-Website/actions/runs/36696800804",
+  "commit": "28e1c54",
+  "runUrl": "https://github.com/LimJaeSub/Portfolio-Website/actions/runs/37738727124",
   "browser": "chromium",
-  "total": 47,
+  "total": 46,
   "passed": 46,
-  "failed": 1,
+  "failed": 0,
   "flaky": 0,
   "skipped": 0,
-  "durationMs": 21042,
+  "durationMs": 11386,
   "files": [
-    {
-      "file": "_ci-check.spec.js",
-      "passed": 0,
-      "failed": 1,
-      "flaky": 0,
-      "skipped": 0
-    },
     {
       "file": "home.spec.js",
       "passed": 6,
