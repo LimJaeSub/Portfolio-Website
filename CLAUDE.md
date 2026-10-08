@@ -116,7 +116,7 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 > **매 세션 시작 시 여기를 먼저 확인. 작업 종료 시 갱신.**
 
 ## 최종 갱신
-2026-09-30
+2026-10-08
 
 ## 완료된 작업
 - [x] Vite + React 프로젝트 초기 셋업
@@ -138,14 +138,10 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 - [x] **Vercel 배포** (Phase 3)
 - [x] TeamTodo 프로젝트 등록 (보류 상태) + `On Hold` 컬럼·상태 배지 추가
 - [x] **다크/라이트 토글** (Redux Toolkit, Phase 4)
+- [x] **Playwright E2E + GitHub Actions + 결과 사이트 표시** (Phase 5)
 
 ## 진행 중 / 다음 작업
-- [x] Playwright 설치 + E2E 테스트 작성 (Phase 5 · 1~3단계)
-- [x] GitHub Actions + 결과 요약 + 사이트 표시 (Phase 5 · 4~6단계)
-- [ ] **CI 첫 실행 확인** ← 현재 여기
-  - 워크플로가 실제로 돌고 `public/test-results.json`이 갱신되는지
-  - 되커밋이 워크플로를 다시 부르지 않는지 (`paths-ignore` · `[skip ci]`)
-  - 확인되면 PW-11을 Done으로
+- [ ] **Firebase Auth + Firestore 이관** ← 현재 여기 (Phase 6)
 
 ## 미확정 사항
 
@@ -1153,12 +1149,13 @@ npm run build    # 통과
 
 ## 인수인계 메모
 
-> 갱신 2026-09-30 — Phase 5 구현 완료, CI 첫 실행 확인 대기
+> 갱신 2026-10-08 — Phase 5 완료 (CI 실행·실패 보고까지 검증)
 
 ### 지금 상태
 - `main` 브랜치, `origin/main`과 동기화
-- 린트·빌드 통과. Playwright 46개 통과 (로컬)
-- **CI는 아직 한 번도 돌지 않았다.** 워크플로를 처음 push하는 시점이다
+- 린트·빌드 통과. Playwright 46개 통과
+- CI 동작 확인 완료 — 일부러 실패를 넣어 파이프라인 전체를 검증했다
+  (잡 실패 / 그래도 결과 갱신 / 되커밋이 연쇄를 안 부름 / `source: ci` 구분)
 - Vercel 배포 완료 (URL은 [11. 레퍼런스] 참고)
 - **PW-11은 `In Progress`다.** 완료 조건 "Playwright E2E 테스트가 통과한다"는
   CI에서 돌고 결과가 사이트에 뜨는 것까지를 뜻하므로 아직 `Done`이 아니다
@@ -1183,12 +1180,13 @@ npm run build    # 통과
 | 항목 | 상태 |
 |---|---|
 | 회고(`retrospective`) 렌더링 | 코드는 작성됐으나 데이터가 비어 있어 **화면에 그려진 적 없음** |
-| GitHub Actions 워크플로 | 로컬에서 YAML 파싱만 확인. **실제로 돌아간 적 없음** |
-| CI 되커밋 루프 차단 | `paths-ignore`·`concurrency`·`[skip ci]` 3중. **실제 검증 전** |
 | 칸반 4컬럼 레이아웃 | `On Hold` 추가로 3 → 4열. 좁은 화면에서 접히는 모습 **미확인** |
 | `On Hold`·상태 배지 색상 | 대비 5.93:1로 AA는 통과. **디자인 확인 미완료** (결정 39) |
 
 ### 알아둘 것
+- **PowerShell에서 `npm`이 막히면** 실행 정책 문제다. `npm.ps1`을 로드할 수 없다는 에러가 나면
+  `npm.cmd` / `npx.cmd`로 쓰거나, `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`로 푼다.
+  Git Bash나 cmd에서는 그냥 된다 ([12. 알려진 이슈] 4번과 같은 계열)
 - **git identity가 이 레포에만 설정돼 있다** (`재섭 <wotjw734843@gmail.com>`).
   전역 설정이 비어 있어 커밋이 막혔던 이력이 있다.
   새 환경에서 같은 증상이 나면 `git config user.email`부터 확인할 것
@@ -1269,6 +1267,15 @@ import './App.css'
 ### 4. Windows PowerShell 사용 시
 - `rm` 미동작 → `Remove-Item` 사용
 - Git 기본 브랜치가 `master`일 수 있음 → `git branch -M main`
+- **`npm` 실행이 막힘** — `npm.ps1 파일을 로드할 수 없습니다` 에러.
+  실행 정책이 `Restricted`(기본값)면 npm의 `.ps1` 래퍼를 못 읽는다. 위치 문제가 아니다.
+
+  ```powershell
+  Get-ExecutionPolicy -List          # CurrentUser가 Undefined면 이 증상
+  npm.cmd test                       # 설정을 안 바꾸고 우회
+  Set-ExecutionPolicy -Scope CurrentUser RemoteSigned   # 영구 해결 (보안 설정 변경)
+  ```
+  Git Bash·cmd에서는 그대로 동작한다
 
 ### 5. 스크롤 스냅
 **`App.css`에 있지 않다.** `src/pages/Home.jsx`의 래퍼 `<main>`에 Tailwind 유틸로 걸려 있다.
@@ -1343,7 +1350,7 @@ React Router 사용 시 `/projects/xxx`로 직접 접근하면 404가 발생한�
 - **Phase 2** ✅ 디자인 리뉴얼 + React Router + 프로젝트 상세 페이지
 - **Phase 3** ✅ Vercel 배포
 - **Phase 4** ✅ Redux Toolkit (다크모드 토글)
-- **Phase 5** 🔲 Playwright E2E 테스트 + CI + **최신 결과 사이트 표시**
+- **Phase 5** ✅ Playwright E2E 테스트 + CI + **최신 결과 사이트 표시**
   - 데이터 주도 테스트 ([8. 테스트 전략])
   - GitHub Actions에서 실행 → JSON 리포터 결과를 `public/test-results.json`에 커밋
   - 사이트가 그 파일을 fetch해 최신 통과/실패를 표시
