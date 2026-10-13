@@ -78,6 +78,7 @@ QA 엔지니어로서의 경력과 프로젝트를 소개하되, 결과물만 �
 ## 이슈
 
 > 스프린트는 [14. 로드맵]의 Phase를 그대로 사용한다.
+> Phase 6은 착수 전 등록분이다 — 전부 `To Do`.
 
 | ID | 제목 | 타입 | 상태 | 스프린트 |
 |----|------|------|------|---------|
@@ -94,6 +95,13 @@ QA 엔지니어로서의 경력과 프로젝트를 소개하되, 결과물만 �
 | PW-11 | Playwright E2E 테스트 작성 | Story | Done | Phase 5 |
 | PW-12 | 요약 스크립트 집계 불일치 — 상위/파일별이 flaky를 다르게 셈 (커밋 전 발견) | Bug | Done | Phase 5 |
 | PW-13 | 결과 카드 테스트가 변이를 잡지 못함 — 응답 가로채기로 보강 | Bug | Done | Phase 5 |
+| PW-14 | Firebase 프로젝트 생성 및 환경변수 설정 | Task | To Do | Phase 6 |
+| PW-15 | Firestore 스키마 생성 — projects 컬렉션 | Task | To Do | Phase 6 |
+| PW-16 | projects.js 데이터를 Firestore로 이관 | Story | To Do | Phase 6 |
+| PW-17 | 페이지의 데이터 소스를 Firestore로 교체 | Story | To Do | Phase 6 |
+| PW-18 | Firestore 로딩·실패 상태 처리 | Task | To Do | Phase 6 |
+| PW-19 | Firebase Auth 관리자 로그인 | Story | To Do | Phase 6 |
+| PW-20 | 로그인 상태 Redux 슬라이스 추가 | Task | To Do | Phase 6 |
 
 ---
 
