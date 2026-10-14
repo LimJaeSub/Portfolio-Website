@@ -95,13 +95,17 @@ QA 엔지니어로서의 경력과 프로젝트를 소개하되, 결과물만 �
 | PW-11 | Playwright E2E 테스트 작성 | Story | Done | Phase 5 |
 | PW-12 | 요약 스크립트 집계 불일치 — 상위/파일별이 flaky를 다르게 셈 (커밋 전 발견) | Bug | Done | Phase 5 |
 | PW-13 | 결과 카드 테스트가 변이를 잡지 못함 — 응답 가로채기로 보강 | Bug | Done | Phase 5 |
-| PW-14 | Firebase 프로젝트 생성 및 환경변수 설정 | Task | To Do | Phase 6 |
+| PW-14 | Firebase 프로젝트 연결 및 SDK 초기화 | Task | To Do | Phase 6 |
 | PW-15 | Firestore 스키마 생성 — projects 컬렉션 | Task | To Do | Phase 6 |
 | PW-16 | projects.js 데이터를 Firestore로 이관 | Story | To Do | Phase 6 |
 | PW-17 | 페이지의 데이터 소스를 Firestore로 교체 | Story | To Do | Phase 6 |
 | PW-18 | Firestore 로딩·실패 상태 처리 | Task | To Do | Phase 6 |
 | PW-19 | Firebase Auth 관리자 로그인 | Story | To Do | Phase 6 |
 | PW-20 | 로그인 상태 Redux 슬라이스 추가 | Task | To Do | Phase 6 |
+| PW-21 | 서비스 계정 키 차단 패턴 — 키 내려받기 전에 선행 | Task | Done | Phase 6 |
+| PW-22 | 시드 스크립트 작성 (Admin SDK) + 실행 전 백업 덤프 | Task | To Do | Phase 6 |
+| PW-23 | Firestore 보안 규칙 — roles/{uid} 기반 | Task | To Do | Phase 6 |
+| PW-24 | 폴백 배너 단언(afterEach) + data-source.spec.js 분리 | Task | To Do | Phase 6 |
 
 ---
 
@@ -281,3 +285,34 @@ else if (key === 'passed' || key === 'flaky') entry.passed += 1   // 파일별: 
 
 배운 점: 실제 데이터의 분포가 좁으면 그 범위 밖의 버그는 드러나지 않는다.
 합성 데이터는 그 범위를 넓히는 수단이다.
+
+### 2026-10-14 · 데이터를 고쳤는데 테스트는 옛 빌드를 보고 있었다
+
+이슈 4건을 추가한 뒤 테스트를 돌렸더니 1건이 실패했다.
+
+```
+Locator: getByText('전체 24개 중 Done 14개')
+Error: element(s) not found
+```
+
+데이터는 분명 24건인데 화면에 없다. 코드 결함을 의심했지만 아니었다.
+
+`playwright.config.js`의 `webServer`는 `npm run build && npm run preview`인데
+**`reuseExistingServer: !process.env.CI`** 가 함께 걸려 있다.
+4173에 서버가 이미 떠 있으면 **command 자체를 실행하지 않는다** — 빌드까지 건너뛴다.
+직전 실행이 띄운 preview 서버가 살아 있었고, 그게 이슈 20건짜리 옛 번들을 서빙하고 있었다.
+
+번들 해시를 비교해서 확인했다. 서빙 중인 것과 `dist/`의 것이 `index-cWSxvmnw.js`로
+같았는데, 그 `dist/`가 애초에 이슈 추가 **전**에 만들어진 것이었다.
+
+해결: 4173을 점유한 프로세스를 끄고 재실행 → 51개 전부 통과.
+
+**이번엔 운이 좋았다.** 옛 빌드가 새 기대값을 못 맞춰서 빨갛게 드러났다.
+반대 방향이 진짜 위험하다 — 데이터를 **되돌리거나** 테스트를 느슨하게 고친 경우,
+옛 번들이 그대로 통과시키고 아무도 눈치채지 못한다.
+CI는 `process.env.CI`가 있어 항상 새로 빌드하므로 **로컬에서만 생기는 함정**이고,
+그래서 "로컬에서 통과했는데 CI에서 깨진다"가 아니라 그 반대로 나타난다.
+
+배운 점: 테스트가 무엇을 상대로 돌았는지를 결과만 보고는 알 수 없다.
+`projects.js`를 만진 뒤에는 빌드 산출물이 실제로 새것인지부터 확인한다.
+

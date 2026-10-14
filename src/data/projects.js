@@ -124,13 +124,17 @@ export const projects = [
       { id: 'PW-11', title: 'Playwright E2E 테스트 작성', type: 'Story', status: 'Done', sprint: 'Phase 5' },
       { id: 'PW-12', title: '요약 스크립트 집계 불일치 — 상위/파일별이 flaky를 다르게 셈 (커밋 전 발견)', type: 'Bug', status: 'Done', sprint: 'Phase 5' },
       { id: 'PW-13', title: '결과 카드 테스트가 변이를 잡지 못함 — 응답 가로채기로 보강', type: 'Bug', status: 'Done', sprint: 'Phase 5' },
-      { id: 'PW-14', title: 'Firebase 프로젝트 생성 및 환경변수 설정', type: 'Task', status: 'To Do', sprint: 'Phase 6' },
+      { id: 'PW-14', title: 'Firebase 프로젝트 연결 및 SDK 초기화', type: 'Task', status: 'To Do', sprint: 'Phase 6' },
       { id: 'PW-15', title: 'Firestore 스키마 생성 — projects 컬렉션', type: 'Task', status: 'To Do', sprint: 'Phase 6' },
       { id: 'PW-16', title: 'projects.js 데이터를 Firestore로 이관', type: 'Story', status: 'To Do', sprint: 'Phase 6' },
       { id: 'PW-17', title: '페이지의 데이터 소스를 Firestore로 교체', type: 'Story', status: 'To Do', sprint: 'Phase 6' },
       { id: 'PW-18', title: 'Firestore 로딩·실패 상태 처리', type: 'Task', status: 'To Do', sprint: 'Phase 6' },
       { id: 'PW-19', title: 'Firebase Auth 관리자 로그인', type: 'Story', status: 'To Do', sprint: 'Phase 6' },
       { id: 'PW-20', title: '로그인 상태 Redux 슬라이스 추가', type: 'Task', status: 'To Do', sprint: 'Phase 6' },
+      { id: 'PW-21', title: '서비스 계정 키 차단 패턴 — 키 내려받기 전에 선행', type: 'Task', status: 'Done', sprint: 'Phase 6' },
+      { id: 'PW-22', title: '시드 스크립트 작성 (Admin SDK) + 실행 전 백업 덤프', type: 'Task', status: 'To Do', sprint: 'Phase 6' },
+      { id: 'PW-23', title: 'Firestore 보안 규칙 — roles/{uid} 기반', type: 'Task', status: 'To Do', sprint: 'Phase 6' },
+      { id: 'PW-24', title: '폴백 배너 단언(afterEach) + data-source.spec.js 분리', type: 'Task', status: 'To Do', sprint: 'Phase 6' },
     ],
 
     devLog: [
@@ -187,6 +191,12 @@ export const projects = [
         title: '내가 틀린 기대값이 코드의 모순을 드러냈다',
         content:
           '요약 스크립트에서 상위 집계와 파일별 집계가 서로 다른 기준을 쓰고 있었다. 상위는 flaky를 통과에서 빼는데 파일별은 통과로 셌다. 같은 JSON 안에서 통과가 두 가지 뜻이 되고, 사이트는 헤드라인에 상위 값을 목록에 파일별 값을 쓰므로 두 숫자가 화면에서 어긋난다. flaky가 0이면 두 계산이 같은 답을 내는데 지금까지 실행에서 flaky가 한 번도 나오지 않아 실제 데이터로는 몇 번을 돌려도 정상으로 보였다. 합성 데이터로 실패 경로를 확인하려다 걸렸는데, 그런데 내 기대값이 먼저 틀렸다 — flaky를 통과로 세서 passed를 2로 적었다. 그 불일치 때문에 들여다보니 코드가 두 곳에서 다른 기준을 쓰고 있었다. 내 잘못된 기대와 코드의 내부 모순이 부딪혀서 드러난 셈이고, 둘 다 맞았거나 둘 다 같은 식으로 틀렸으면 안 보였을 것이다. 파일별에도 네 칸을 그대로 두고 파일별 합이 total과 같은지를 검증에 넣어 해결했다. 실제 데이터의 분포가 좁으면 그 범위 밖의 버그는 드러나지 않고, 합성 데이터는 그 범위를 넓히는 수단이다.',
+      },
+      {
+        date: '2026-10-14',
+        title: '데이터를 고쳤는데 테스트는 옛 빌드를 보고 있었다',
+        content:
+          '이슈 4건을 추가한 뒤 테스트를 돌렸더니 전체 24개 중 Done 14개라는 문구를 찾지 못해 1건이 실패했다. 데이터는 분명 24건인데 화면에 없어 코드 결함을 의심했지만 아니었다. playwright.config.js의 webServer는 npm run build && npm run preview인데 reuseExistingServer가 CI가 아닐 때 켜져 있어서, 4173에 서버가 이미 떠 있으면 command 자체를 실행하지 않는다 — 빌드까지 건너뛴다. 직전 실행이 띄운 preview 서버가 살아남아 이슈 20건짜리 옛 번들을 계속 서빙하고 있었다. 서빙 중인 번들 해시와 dist의 해시가 같다는 것으로 확인했는데, 그 dist가 애초에 이슈 추가 전에 만들어진 것이었다. 4173을 점유한 프로세스를 끄고 재실행하니 51개가 전부 통과했다. 이번엔 운이 좋아서 옛 빌드가 새 기대값을 못 맞춰 빨갛게 드러났다. 반대 방향이 진짜 위험하다 — 데이터를 되돌리거나 테스트를 느슨하게 고친 경우라면 옛 번들이 그대로 통과시키고 아무도 눈치채지 못한다. CI는 항상 새로 빌드하므로 로컬에서만 생기는 함정이고, 그래서 로컬은 통과하는데 CI가 깨지는 것이 아니라 그 반대로 나타난다. 테스트가 무엇을 상대로 돌았는지는 결과만 보고 알 수 없다.',
       },
     ],
   },

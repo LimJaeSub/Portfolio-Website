@@ -141,7 +141,7 @@ Jira/Confluence 링크를 거는 대신, 기획 문서 · 이슈 보드 · 개�
 - [x] **Playwright E2E + GitHub Actions + 결과 사이트 표시** (Phase 5)
 
 ## 진행 중 / 다음 작업
-- [x] Phase 6 이슈 등록 (PW-14~20, 전부 `To Do`)
+- [x] Phase 6 이슈 등록 (PW-14~24) — 사양 확정 후 4건 추가, PW-21은 완료
 - [x] Phase 6 사양 확정 — §8 Firestore 이관 사양, 결정 52~67
 - [ ] **Wanted · CI/CD 회고 작성** ← 가장 급함 (PM이 직접 씀)
   - Wanted는 **대표작 3개 중 하나인데 개요 탭만 있다.** 홈에서 바로 눌러 들어온다
@@ -1111,6 +1111,18 @@ Phase 7에서 데모 계정을 추가할 때 **규칙을 고치지 않는다** �
 폴백이 켜져 **결정 60의 단언이 CI를 영구 빨강으로** 만든다.
 dev/prod를 나누는 시점에 옮긴다.
 
+### 이관 전 번들 크기 (결정 63)
+
+착수 시점 기준. Firebase SDK 추가 후 같은 방식으로 재측정해 비교한다.
+
+```
+2026-10-14 · npm run build · 이슈 24건 기준
+  JS    301.80 kB  →  gzip  99.15 kB
+  CSS    21.68 kB  →  gzip   4.96 kB
+```
+
+> 지금 재지 않으면 나중에 `git stash`로 되돌려 재야 한다.
+
 > 요금제는 **Spark(무료)로 충분하다.** 일 5만 읽기까지 무료이고,
 > CI 1회가 약 250회다. Blaze가 필요해지는 시점은 Phase 8(Cloud Functions)이다.
 
@@ -1615,6 +1627,25 @@ npm run seed
 
 되돌릴 때도 마찬가지다 — `git revert` 후 `npm run seed` (결정 66).
 `scripts/.backup/`에 직전 덤프가 있다.
+
+### 10. 로컬 테스트가 **옛 빌드**를 상대로 돌 수 있다
+
+`playwright.config.js`의 `webServer`는 `npm run build && npm run preview`지만
+`reuseExistingServer: !process.env.CI`가 함께 걸려 있다.
+**4173에 서버가 이미 떠 있으면 command를 실행하지 않는다 — 빌드까지 건너뛴다.**
+
+```bash
+netstat -ano | grep ":4173.*LISTEN"        # 남은 서버 확인
+# PowerShell: Stop-Process -Id <PID> -Force
+```
+
+- `projects.js`를 바꾼 뒤 테스트가 **옛 데이터 기준으로** 통과하거나 실패한다
+- CI는 `process.env.CI`가 있어 항상 새로 빌드한다 → **로컬에서만 생긴다**
+- 그래서 "로컬은 통과, CI는 실패"가 아니라 **그 반대**로 나타난다
+
+> ⚠️ **빨갛게 드러나면 운이 좋은 경우다.**
+> 데이터를 되돌리거나 테스트를 느슨하게 고쳤다면 옛 번들이 **조용히 통과시킨다.**
+> 데이터를 만진 뒤 결과가 이상하면 코드보다 **빌드 산출물의 나이**를 먼저 의심한다.
 
 ## 배포 환경
 - 플랫폼: Vercel
