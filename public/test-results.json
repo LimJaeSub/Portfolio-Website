@@ -1,15 +1,15 @@
 {
-  "generatedAt": "2026-10-14T08:04:16.209Z",
+  "generatedAt": "2026-10-14T08:13:12.997Z",
   "source": "ci",
-  "commit": "0e965a8",
-  "runUrl": "https://github.com/LimJaeSub/Portfolio-Website/actions/runs/38532456601",
+  "commit": "266e02a",
+  "runUrl": "https://github.com/LimJaeSub/Portfolio-Website/actions/runs/38533475583",
   "browser": "chromium",
   "total": 51,
   "passed": 51,
   "failed": 0,
   "flaky": 0,
   "skipped": 0,
-  "durationMs": 12171,
+  "durationMs": 10838,
   "files": [
     {
       "file": "home.spec.js",
