@@ -144,3 +144,11 @@ vite.config.ts.timestamp-*
 /blob-report/
 /playwright/.cache/
 /playwright-report.json
+
+# Firebase — 서비스 계정 키 (결정 62)
+# 경로가 아니라 파일명 패턴으로 막는다. 콘솔 기본 이름이 *-firebase-adminsdk-*.json 이다
+scripts/secrets/
+*serviceAccount*.json
+*service-account*.json
+*firebase-adminsdk*.json
+scripts/.backup/
