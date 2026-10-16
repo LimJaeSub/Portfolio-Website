@@ -1,0 +1,24 @@
+rules_version = '2';
+
+// 이 파일은 버전 관리용 원본이다. Firebase CLI를 쓰지 않으므로
+// 콘솔(Firestore → 규칙)에 붙여넣어 배포한다. 양쪽이 어긋나지 않게
+// 규칙을 바꿀 때는 반드시 이 파일을 먼저 고친다.
+//
+// 현재 단계: 읽기만 연다 (작업 순서 2번).
+// 쓰기는 roles/{uid} 기반으로 PW-19(Auth) 이후에 붙인다 — 결정 58.
+// 지금 쓰기 규칙을 올려도 로그인이 없어 시험할 수 없다.
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // 포트폴리오 내용이므로 누구나 읽는다. 로그인을 요구하면
+    // 방문자에게 빈 화면이 된다.
+    match /projects/{projectId} {
+      allow read: if true;
+      allow write: if false;      // 시드는 Admin SDK가 규칙을 우회한다 (결정 62)
+    }
+
+    // 명시하지 않은 경로는 기본 거부다. roles/{uid}도 아직 여기 없으므로
+    // 읽기·쓰기 모두 막혀 있다 — PW-19 이후에 추가한다.
+  }
+}
