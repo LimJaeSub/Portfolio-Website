@@ -95,7 +95,7 @@ QA 엔지니어로서의 경력과 프로젝트를 소개하되, 결과물만 �
 | PW-11 | Playwright E2E 테스트 작성 | Story | Done | Phase 5 |
 | PW-12 | 요약 스크립트 집계 불일치 — 상위/파일별이 flaky를 다르게 셈 (커밋 전 발견) | Bug | Done | Phase 5 |
 | PW-13 | 결과 카드 테스트가 변이를 잡지 못함 — 응답 가로채기로 보강 | Bug | Done | Phase 5 |
-| PW-14 | Firebase 프로젝트 연결 및 SDK 초기화 | Task | To Do | Phase 6 |
+| PW-14 | Firebase 프로젝트 연결 및 SDK 초기화 | Task | Done | Phase 6 |
 | PW-15 | Firestore 스키마 생성 — projects 컬렉션 | Task | To Do | Phase 6 |
 | PW-16 | projects.js 데이터를 Firestore로 이관 | Story | To Do | Phase 6 |
 | PW-17 | 페이지의 데이터 소스를 Firestore로 교체 | Story | To Do | Phase 6 |
