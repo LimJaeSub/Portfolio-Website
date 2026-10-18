@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "test": "playwright test",
-    "test:ui": "playwright test --ui"
+    "test:ui": "playwright test --ui",
+    "seed": "node scripts/seed-firestore.js"
   },
   "dependencies": {
     "@reduxjs/toolkit": "^2.12.0",
@@ -29,6 +30,7 @@
     "eslint": "^9.39.4",
     "eslint-plugin-react-hooks": "^7.0.1",
     "eslint-plugin-react-refresh": "^0.5.2",
+    "firebase-admin": "^14.5.0",
     "globals": "^17.4.0",
     "tailwindcss": "^4.2.1",
     "vite": "^7.3.1"
