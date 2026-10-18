@@ -103,7 +103,7 @@ QA 엔지니어로서의 경력과 프로젝트를 소개하되, 결과물만 �
 | PW-19 | Firebase Auth 관리자 로그인 | Story | To Do | Phase 6 |
 | PW-20 | 로그인 상태 Redux 슬라이스 추가 | Task | To Do | Phase 6 |
 | PW-21 | 서비스 계정 키 차단 패턴 — 키 내려받기 전에 선행 | Task | Done | Phase 6 |
-| PW-22 | 시드 스크립트 작성 (Admin SDK) + 실행 전 백업 덤프 | Task | To Do | Phase 6 |
+| PW-22 | 시드 스크립트 작성 (Admin SDK) + 실행 전 백업 덤프 | Task | Done | Phase 6 |
 | PW-23 | Firestore 보안 규칙 — roles/{uid} 기반 | Task | In Progress | Phase 6 |
 | PW-24 | 폴백 배너 단언(afterEach) + data-source.spec.js 분리 | Task | To Do | Phase 6 |
 

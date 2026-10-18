@@ -132,7 +132,7 @@ export const projects = [
       { id: 'PW-19', title: 'Firebase Auth 관리자 로그인', type: 'Story', status: 'To Do', sprint: 'Phase 6' },
       { id: 'PW-20', title: '로그인 상태 Redux 슬라이스 추가', type: 'Task', status: 'To Do', sprint: 'Phase 6' },
       { id: 'PW-21', title: '서비스 계정 키 차단 패턴 — 키 내려받기 전에 선행', type: 'Task', status: 'Done', sprint: 'Phase 6' },
-      { id: 'PW-22', title: '시드 스크립트 작성 (Admin SDK) + 실행 전 백업 덤프', type: 'Task', status: 'To Do', sprint: 'Phase 6' },
+      { id: 'PW-22', title: '시드 스크립트 작성 (Admin SDK) + 실행 전 백업 덤프', type: 'Task', status: 'Done', sprint: 'Phase 6' },
       { id: 'PW-23', title: 'Firestore 보안 규칙 — roles/{uid} 기반', type: 'Task', status: 'In Progress', sprint: 'Phase 6' },
       { id: 'PW-24', title: '폴백 배너 단언(afterEach) + data-source.spec.js 분리', type: 'Task', status: 'To Do', sprint: 'Phase 6' },
     ],
