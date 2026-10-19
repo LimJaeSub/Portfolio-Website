@@ -20,6 +20,17 @@ function expectedTabs(project) {
   }
 }
 
+/*
+ * "없어야 한다"(toHaveCount(0))는 기다릴 이유가 없어 즉시 통과한다.
+ * 데이터는 Firestore에서 비동기로 오므로, 로딩 화면에서 확인하면 무엇이든 '없다'.
+ * 그래서 부재를 확인하기 전에 데이터가 도착했다는 증거(제목)를 먼저 기다린다.
+ * 2026-10-19 변이로 확인: 이 대기가 없으면 GitHub·배포 링크가 둘 다 없는
+ * 프로젝트에서 '없는 버튼을 그리는' 버그를 놓쳤다.
+ */
+async function waitForProject(page, project) {
+  await expect(page.locator('h1')).toContainText(project.title)
+}
+
 test('목록 페이지에 전 프로젝트가 노출된다', async ({ page }) => {
   await page.goto('/projects')
   const cards = page.locator('[id^="project-card-"]')
@@ -36,6 +47,7 @@ for (const project of projects) {
 
     test('데이터가 있는 탭만 노출된다', async ({ page }) => {
       await page.goto(`/projects/${project.id}`)
+      await waitForProject(page, project)
 
       for (const [tab, shouldExist] of Object.entries(expectedTabs(project))) {
         const locator = page.locator(`#tab-${tab}`)
@@ -70,6 +82,7 @@ for (const project of projects) {
     /* 링크가 없으면 버튼을 그리지 않는다 (결정 40) */
     test('링크 버튼이 데이터와 일치한다', async ({ page }) => {
       await page.goto(`/projects/${project.id}`)
+      await waitForProject(page, project)
       const github = page.getByRole('link', { name: 'GitHub ↗' })
       const demo = page.getByRole('link', { name: '배포 사이트 ↗' })
 

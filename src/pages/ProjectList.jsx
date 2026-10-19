@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ProjectCard from '../components/ProjectCard'
+import CardSkeleton from '../components/CardSkeleton'
 // CATEGORY_LABELS는 데이터가 아니라 UI 라벨이라 Firestore로 보내지 않는다
 import { CATEGORY_LABELS } from '../data/projects'
 import useProjects from '../data/useProjects'
@@ -48,10 +49,7 @@ function ProjectList() {
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-6">
         {loading
-          ? // 스피너 대신 카드 자리를 잡아둔다 — 데이터가 와도 레이아웃이 흔들리지 않는다 (결정 57)
-            [0, 1, 2].map((i) => (
-              <div key={i} className="h-[220px] animate-pulse rounded-md bg-surface" />
-            ))
+          ? [0, 1, 2].map((i) => <CardSkeleton key={i} />)
           : visible.map((project) => <ProjectCard key={project.id} project={project} />)}
       </div>
     </main>

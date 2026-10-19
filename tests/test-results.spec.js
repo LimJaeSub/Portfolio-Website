@@ -47,6 +47,8 @@ for (const project of withResults) {
 for (const project of withoutResults) {
   test(`${project.title} — 테스트 결과를 그리지 않는다`, async ({ page }) => {
     await page.goto(`/projects/${project.id}`)
+    // 부재 확인은 로딩 화면에서 즉시 통과한다 — 데이터 도착(제목)을 먼저 기다린다
+    await expect(page.locator('h1')).toContainText(project.title)
     await expect(page.locator('#test-results')).toHaveCount(0)
   })
 }

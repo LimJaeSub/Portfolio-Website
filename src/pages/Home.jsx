@@ -4,7 +4,7 @@ import Projects from '../components/Projects'
 import Skills from '../components/Skills'
 import SideNav from '../components/SideNav'
 
-import { featuredProjects } from '../data/projects'
+import useProjects from '../data/useProjects'
 
 /*
  * 스크롤 스냅은 이 페이지에만 적용한다.
@@ -12,12 +12,15 @@ import { featuredProjects } from '../data/projects'
  * 모바일은 콘텐츠가 잘리지 않도록 스냅을 해제 (결정 기록 18)
  */
 function Home() {
+  const { projects, loading } = useProjects()
+  const featured = projects.filter((project) => project.featured)
+
   return (
     <>
       <main className="h-screen snap-none overflow-y-auto md:snap-y md:snap-mandatory">
         <MyPage />
         <Experience />
-        <Projects projects={featuredProjects} />
+        <Projects projects={featured} loading={loading} />
         <Skills />
       </main>
       <SideNav />
