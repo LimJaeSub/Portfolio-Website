@@ -135,6 +135,7 @@ export const projects = [
       { id: 'PW-22', title: '시드 스크립트 작성 (Admin SDK) + 실행 전 백업 덤프', type: 'Task', status: 'Done', sprint: 'Phase 6' },
       { id: 'PW-23', title: 'Firestore 보안 규칙 — roles/{uid} 기반', type: 'Task', status: 'In Progress', sprint: 'Phase 6' },
       { id: 'PW-24', title: '폴백 배너 단언(afterEach) + data-source.spec.js 분리', type: 'Task', status: 'To Do', sprint: 'Phase 6' },
+      { id: 'PW-25', title: 'Firestore 연결 실패가 "프로젝트 없음"으로 보임 — getDocs가 캐시로 대답 (배포 후 발견)', type: 'Bug', status: 'Done', sprint: 'Phase 6' },
     ],
 
     devLog: [
@@ -203,6 +204,12 @@ export const projects = [
         title: '읽기가 됐다는 것만으로는 규칙이 동작하는지 알 수 없다',
         content:
           '보안 규칙을 콘솔에 게시한 뒤 클라이언트 SDK로 projects를 읽어봤더니 성공했다. 0건이었지만 permission-denied가 사라졌으니 규칙이 올라간 것으로 보였다. 그런데 이 결과는 두 가지를 구분하지 못한다 — 내가 쓴 규칙(읽기 공개·쓰기 차단)일 수도 있고, Firestore 테스트 모드의 30일 전체 허용 기본 규칙일 수도 있다. 둘 다 읽기가 성공한다. 후자라면 보안 구멍이 열린 채 정상이라고 보고할 뻔했다. 구분하려면 거부돼야 하는 것이 실제로 거부되는지를 봐야 한다. projects 읽기는 허용, projects 쓰기는 permission-denied, 규칙에 명시하지 않은 roles 읽기도 permission-denied — 뒤의 둘이 막혔으므로 내 규칙이 동작 중인 것이 확인됐다. 테스트 모드였다면 셋 다 허용됐을 것이다. 도중에 걸린 것도 있다. 쓰기 시험용 문서 id를 __probe__로 했더니 INVALID_ARGUMENT, 예약된 리소스 id라는 에러가 났다. Firestore는 앞뒤로 밑줄 두 개인 패턴을 예약어로 막는데, 규칙 평가 전에 id 검증에서 걸리므로 거부된 것이 아니라 규칙까지 가지도 못한 것이다. 기대한 permission-denied가 아닌 다른 코드였기에 알아챘고, 단순히 실패하면 통과로 짰다면 이것도 성공으로 셌을 것이다. 허용 경로만 확인하는 검사는 전부 허용 상태와 구별되지 않는다. 거부 경로를 함께 넣어야 규칙을 검증한 것이 되고, 실패를 기대하는 검사는 실패의 종류까지 봐야 한다.',
+      },
+      {
+        date: '2026-10-19',
+        title: '서버에 못 닿았는데 에러가 아니라 "0건"이 왔다',
+        content:
+          '폴백을 만들고 Firestore 요청을 일부러 끊어봤다. 무응답(요청을 붙잡고 답하지 않음)은 8초 뒤 배너가 떴는데, 거부(연결을 끊음)는 배너 대신 "아직 등록된 프로젝트가 없습니다"가 떴다. 브라우저 콘솔에 값을 찍어보니 "Could not reach Cloud Firestore backend" 직후 결과가 fromCache=true, size=0이었다. Firestore SDK는 서버에 못 닿으면 에러를 내지 않고 브라우저 캐시로 대답한다. 오프라인에서도 앱이 돌게 하려는 설계인데, 첫 방문은 캐시가 비어 있으니 0건이 오고, catch에 걸리지 않으니 폴백도 켜지지 않는다. 실패가 조용히 없음으로 보고된 것이다. 더 나빴던 점은 2·3단계 배포본이 이미 이 상태였다는 것이다. 3단계에서 통신을 끊고 카드 0개를 봤을 때 폴백이 없어서 비는 것으로 해석했는데, 실제로는 실패조차 감지되지 않고 있었다. 같은 관찰을 다른 원인으로 읽었다. getDocs를 getDocsFromServer로, getDoc을 getDocFromServer로 바꾸자 거부 경로도 0.6초 만에 배너가 떴다. 라이브러리가 실패하지 않게 해주는 기능이 실패를 숨기는 기능이 될 수 있고, 실패 경로는 실패의 종류마다 따로 밟아봐야 한다. 무응답만 시험했다면 거부 경로가 막혀 있다는 걸 몰랐을 것이다.',
       },
     ],
   },
