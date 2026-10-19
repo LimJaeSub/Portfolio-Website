@@ -98,7 +98,7 @@ QA 엔지니어로서의 경력과 프로젝트를 소개하되, 결과물만 �
 | PW-14 | Firebase 프로젝트 연결 및 SDK 초기화 | Task | Done | Phase 6 |
 | PW-15 | Firestore 스키마 생성 — projects 컬렉션 | Task | To Do | Phase 6 |
 | PW-16 | projects.js 데이터를 Firestore로 이관 | Story | To Do | Phase 6 |
-| PW-17 | 페이지의 데이터 소스를 Firestore로 교체 | Story | To Do | Phase 6 |
+| PW-17 | 페이지의 데이터 소스를 Firestore로 교체 | Story | In Progress | Phase 6 |
 | PW-18 | Firestore 로딩·실패 상태 처리 | Task | To Do | Phase 6 |
 | PW-19 | Firebase Auth 관리자 로그인 | Story | To Do | Phase 6 |
 | PW-20 | 로그인 상태 Redux 슬라이스 추가 | Task | To Do | Phase 6 |

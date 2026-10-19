@@ -85,9 +85,14 @@ if (dryRun) {
 
 /* 배치는 전부 성공하거나 전부 실패한다 — 절반만 반영된 상태를 만들지 않는다 */
 const batch = db.batch()
-for (const project of projects) {
-  batch.set(db.collection(COLLECTION).doc(project.id), project)
-}
+projects.forEach((project, index) => {
+  /*
+   * Firestore는 문서를 id 알파벳순으로 돌려준다. projects.js의 배열 순서(= 화면 순서)를
+   * 보존하려고 order를 붙인다. 손으로 쓰는 값이 아니라 배열 위치에서 매번 다시 계산하므로
+   * 원본에 없는 데이터를 사본이 따로 갖는 것이 아니다 (결정 69의 한 방향 유지)
+   */
+  batch.set(db.collection(COLLECTION).doc(project.id), { ...project, order: index })
+})
 for (const id of toDelete) {
   batch.delete(db.collection(COLLECTION).doc(id))
 }

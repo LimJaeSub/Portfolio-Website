@@ -127,7 +127,7 @@ export const projects = [
       { id: 'PW-14', title: 'Firebase 프로젝트 연결 및 SDK 초기화', type: 'Task', status: 'Done', sprint: 'Phase 6' },
       { id: 'PW-15', title: 'Firestore 스키마 생성 — projects 컬렉션', type: 'Task', status: 'To Do', sprint: 'Phase 6' },
       { id: 'PW-16', title: 'projects.js 데이터를 Firestore로 이관', type: 'Story', status: 'To Do', sprint: 'Phase 6' },
-      { id: 'PW-17', title: '페이지의 데이터 소스를 Firestore로 교체', type: 'Story', status: 'To Do', sprint: 'Phase 6' },
+      { id: 'PW-17', title: '페이지의 데이터 소스를 Firestore로 교체', type: 'Story', status: 'In Progress', sprint: 'Phase 6' },
       { id: 'PW-18', title: 'Firestore 로딩·실패 상태 처리', type: 'Task', status: 'To Do', sprint: 'Phase 6' },
       { id: 'PW-19', title: 'Firebase Auth 관리자 로그인', type: 'Story', status: 'To Do', sprint: 'Phase 6' },
       { id: 'PW-20', title: '로그인 상태 Redux 슬라이스 추가', type: 'Task', status: 'To Do', sprint: 'Phase 6' },
