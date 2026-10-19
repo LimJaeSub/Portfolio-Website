@@ -3,6 +3,7 @@ import Experience from '../components/Experience'
 import Projects from '../components/Projects'
 import Skills from '../components/Skills'
 import SideNav from '../components/SideNav'
+import FallbackBanner from '../components/FallbackBanner'
 
 import useProjects from '../data/useProjects'
 
@@ -12,11 +13,12 @@ import useProjects from '../data/useProjects'
  * 모바일은 콘텐츠가 잘리지 않도록 스냅을 해제 (결정 기록 18)
  */
 function Home() {
-  const { projects, loading } = useProjects()
+  const { projects, loading, fallback, retry } = useProjects()
   const featured = projects.filter((project) => project.featured)
 
   return (
     <>
+      {fallback && <FallbackBanner onRetry={retry} />}
       <main className="h-screen snap-none overflow-y-auto md:snap-y md:snap-mandatory">
         <MyPage />
         <Experience />

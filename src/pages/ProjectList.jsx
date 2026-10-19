@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ProjectCard from '../components/ProjectCard'
 import CardSkeleton from '../components/CardSkeleton'
+import FallbackBanner from '../components/FallbackBanner'
 // CATEGORY_LABELS는 데이터가 아니라 UI 라벨이라 Firestore로 보내지 않는다
 import { CATEGORY_LABELS } from '../data/projects'
 import useProjects from '../data/useProjects'
@@ -12,13 +13,14 @@ const filters = [{ value: 'all', label: '전체' }, ...Object.entries(CATEGORY_L
 
 function ProjectList() {
   const [category, setCategory] = useState('all')
-  const { projects, loading } = useProjects()
+  const { projects, loading, fallback, retry } = useProjects()
 
   const visible =
     category === 'all' ? projects : projects.filter((p) => p.category === category)
 
   return (
     <main className="mx-auto w-full max-w-[1180px] px-[clamp(20px,5vw,72px)] py-[88px]">
+      {fallback && <FallbackBanner onRetry={retry} />}
       <Link to="/" className="text-[13px] text-text/55 hover:text-accent">
         ← 홈
       </Link>
@@ -52,6 +54,11 @@ function ProjectList() {
           ? [0, 1, 2].map((i) => <CardSkeleton key={i} />)
           : visible.map((project) => <ProjectCard key={project.id} project={project} />)}
       </div>
+
+      {/* 실패는 폴백이 채우므로 여기 오는 건 Firestore가 정말 비어 있을 때뿐이다 */}
+      {!loading && projects.length === 0 && (
+        <p className="text-[15px] text-text/55">아직 등록된 프로젝트가 없습니다</p>
+      )}
     </main>
   )
 }

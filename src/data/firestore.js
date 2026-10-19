@@ -18,3 +18,17 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig)
 
 export const db = getFirestore(app)
+
+// 응답이 오지 않으면 스켈레톤이 끝나지 않는다. 시간을 정해 실패로 넘긴다 (결정 57)
+const TIMEOUT_MS = 8000
+
+export function withTimeout(promise) {
+  let timer
+  const timeout = new Promise((_, reject) => {
+    timer = setTimeout(
+      () => reject(new Error(`Firestore 응답 없음 (${TIMEOUT_MS / 1000}초)`)),
+      TIMEOUT_MS,
+    )
+  })
+  return Promise.race([promise, timeout]).finally(() => clearTimeout(timer))
+}

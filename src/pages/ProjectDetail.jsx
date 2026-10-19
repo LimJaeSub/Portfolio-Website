@@ -4,6 +4,7 @@ import Tag from '../components/Tag'
 import Divider from '../components/Divider'
 import StatusBadge from '../components/StatusBadge'
 import TestResults from '../components/TestResults'
+import FallbackBanner from '../components/FallbackBanner'
 import useProject from '../data/useProject'
 
 const ISSUE_TYPE_CLASS = {
@@ -32,7 +33,8 @@ function ProjectDetail() {
   const [activeTab, setActiveTab] = useState('overview')
   const [sprint, setSprint] = useState('all')
 
-  const { project, loading } = useProject(id)
+  const { project, loading, fallback, retry } = useProject(id)
+  const banner = fallback && <FallbackBanner onRetry={retry} />
 
   // 로딩을 '없음'과 구분한다. 구분하지 않으면 멀쩡한 프로젝트도 응답이 오기 전
   // 잠깐 "찾을 수 없습니다"가 떴다가 바뀐다
@@ -48,6 +50,7 @@ function ProjectDetail() {
   if (!project) {
     return (
       <main className="mx-auto w-full max-w-[1180px] px-[clamp(20px,5vw,72px)] py-[88px]">
+        {banner}
         <h1 className="mb-4 text-[28px] font-medium tracking-[-0.02em]">
           프로젝트를 찾을 수 없습니다
         </h1>
@@ -78,6 +81,7 @@ function ProjectDetail() {
 
   return (
     <main className="mx-auto w-full max-w-[1180px] px-[clamp(20px,5vw,72px)] py-[88px]">
+      {banner}
       <Link to="/projects" className="text-[13px] text-text/55 hover:text-accent">
         ← 프로젝트 목록
       </Link>
