@@ -1,7 +1,9 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import ProjectCard from '../components/ProjectCard'
-import { projects, CATEGORY_LABELS } from '../data/projects'
+// CATEGORY_LABELS는 데이터가 아니라 UI 라벨이라 Firestore로 보내지 않는다
+import { CATEGORY_LABELS } from '../data/projects'
+import useProjects from '../data/useProjects'
 
 const filters = [{ value: 'all', label: '전체' }, ...Object.entries(CATEGORY_LABELS).map(
   ([value, label]) => ({ value, label })
@@ -9,6 +11,7 @@ const filters = [{ value: 'all', label: '전체' }, ...Object.entries(CATEGORY_L
 
 function ProjectList() {
   const [category, setCategory] = useState('all')
+  const { projects, loading } = useProjects()
 
   const visible =
     category === 'all' ? projects : projects.filter((p) => p.category === category)
@@ -44,9 +47,12 @@ function ProjectList() {
       </div>
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(260px,1fr))] gap-6">
-        {visible.map((project) => (
-          <ProjectCard key={project.id} project={project} />
-        ))}
+        {loading
+          ? // 스피너 대신 카드 자리를 잡아둔다 — 데이터가 와도 레이아웃이 흔들리지 않는다 (결정 57)
+            [0, 1, 2].map((i) => (
+              <div key={i} className="h-[220px] animate-pulse rounded-md bg-surface" />
+            ))
+          : visible.map((project) => <ProjectCard key={project.id} project={project} />)}
       </div>
     </main>
   )
