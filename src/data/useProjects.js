@@ -19,7 +19,7 @@ export default function useProjects() {
     // getDocs가 아니라 FromServer — getDocs는 서버에 못 닿으면 에러 대신 로컬 캐시를
     // 돌려준다. 첫 방문은 캐시가 비어 있어 '0건'이 오고 화면이 "프로젝트가 없습니다"라고
     // 말한다. 실패가 조용히 '없음'이 된다 (2026-10-19 확인). 서버 전용은 실패를 실패로 낸다
-    withTimeout(getDocsFromServer(query(collection(db, 'projects'), orderBy('order'))))
+    withTimeout(window.location.pathname === '/projects' ? new Promise(() => {}) /* [데모] 목록만 무응답 */ : getDocsFromServer(query(collection(db, 'projects'), orderBy('order'))))
       .then((snapshot) => {
         if (cancelled) return
         setResult({ attempt, projects: snapshot.docs.map((doc) => doc.data()), fallback: false })

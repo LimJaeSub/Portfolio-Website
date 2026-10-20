@@ -15,7 +15,7 @@ export default function useProject(id) {
     let cancelled = false
 
     // getDoc이 아니라 FromServer — 캐시로 대신 답하면 실패가 '없음'으로 보인다 (useProjects 참고)
-    withTimeout(getDocFromServer(doc(db, 'projects', id)))
+    withTimeout(Promise.reject(new Error('[데모] 상세 페이지 일부러 실패')))
       .then((snapshot) => {
         if (cancelled) return
         setResult({ key, project: snapshot.exists() ? snapshot.data() : null, fallback: false })
