@@ -3,7 +3,7 @@ import Experience from '../components/Experience'
 import Projects from '../components/Projects'
 import Skills from '../components/Skills'
 import SideNav from '../components/SideNav'
-import FallbackBanner from '../components/FallbackBanner'
+import StatusBanner from '../components/StatusBanner'
 
 import useProjects from '../data/useProjects'
 
@@ -18,7 +18,7 @@ function Home() {
 
   return (
     <>
-      {fallback && <FallbackBanner onRetry={retry} />}
+      <StatusBanner loading={loading} fallback={fallback} onRetry={retry} />
       <main className="h-screen snap-none overflow-y-auto md:snap-y md:snap-mandatory">
         <MyPage />
         <Experience />
